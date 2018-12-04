@@ -1,2 +1,7 @@
 #place here the header of the same name to enable downloading yout custom data
 #cookie:
+#logging:
+#  level:
+#    fr:
+#      sma:
+#        adventofcode: DEBUG

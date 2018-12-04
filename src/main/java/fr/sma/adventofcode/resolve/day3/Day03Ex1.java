@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Component
@@ -48,11 +49,9 @@ public class Day03Ex1 implements ExSolution {
 	}
 	
 	public int claimFabric(List<byte[]> fabric, FabricClaim claim) {
-		return (int) Stream.iterate(claim.getMarginV(), y -> y+1)
-				.limit(claim.getHeight())
-				.map(fabric::get)
-				.flatMap(fabricLine -> Stream.iterate(claim.getMarginH(), x -> x+1)
-						.limit(claim.getWidth())
+		return (int) IntStream.range(claim.getMarginV(), claim.getHeight())
+				.mapToObj(fabric::get)
+				.flatMapToInt(fabricLine -> IntStream.range(claim.getMarginH(), claim.getWidth())
 						.peek(x -> fabricLine[x]++)
 						.filter(x -> fabricLine[x] == 2)
 				).count();

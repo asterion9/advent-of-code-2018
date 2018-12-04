@@ -6,6 +6,7 @@ import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sound.midi.ShortMessage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Component
@@ -52,21 +54,20 @@ public class Day03Ex2 implements ExSolution {
 	}
 	
 	public List<Short> claimFabric(List<short[]> fabric, FabricClaim claim) {
-		return Stream.iterate(claim.getMarginV(), y -> y+1)
-				.limit(claim.getHeight())
-				.map(fabric::get)
-				.flatMap(fabricLine -> Stream.iterate(claim.getMarginH(), x -> x+1)
-						.limit(claim.getWidth())
+		return IntStream.range(claim.getMarginV(), claim.getHeight())
+				.mapToObj(fabric::get)
+				.flatMapToInt(fabricLine -> IntStream.range(claim.getMarginH(), claim.getWidth())
 						.flatMap(x -> {
 							short oldValue = fabricLine[x];
 							fabricLine[x] = claim.getId();
 							if(oldValue != 0) {
-								return Stream.of(oldValue, claim.getId());
+								return IntStream.of(oldValue, claim.getId());
 							}
-							return Stream.empty();
+							return IntStream.empty();
 						})
 				)
 				.distinct()
+				.mapToObj(i -> (short)i)
 				.collect(Collectors.toList());
 	}
 	

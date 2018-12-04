@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 
 @Component
-public class Day04Ex1 implements ExSolution {
+public class Day04Ex2 implements ExSolution {
 	
 	private static final Pattern PATTERN_LINE = Pattern.compile("\\[(.+)\\] (.+)");
 	
@@ -24,7 +24,7 @@ public class Day04Ex1 implements ExSolution {
 	
 	@Override
 	public void run() throws Exception {
-		System.out.println("Day04Ex1");
+		System.out.println("Day04Ex2");
 		
 		String data = dataFetcher.fetch(4);
 		
@@ -37,7 +37,7 @@ public class Day04Ex1 implements ExSolution {
 				.map(GuardShift::build) // build a guard shift from lines
 				.sorted(Comparator.comparing(GuardShift::getId)) // sort by id
 				.collapse((gs1, gs2) -> gs1.getId() == gs2.getId(), GuardShift::merge) //group by same guard
-				.sorted(Comparator.comparing(GuardShift::getTotalSleep).reversed()) //order by most sleepy guard
+				.sorted(Comparator.comparing(GuardShift::getMaxSleep).reversed()) //order by guard having most frequent sleep minute
 				.peek(System.out::println)
 				.findFirst()
 				.map(gs -> gs.getMaxMinute() * gs.getId()) // compute data for most sleepy guard
