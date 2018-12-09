@@ -2,14 +2,12 @@ package fr.sma.adventofcode.resolve.day7;
 
 import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.regex.Pattern;
 
 @Component
 public class Day07Ex1 implements ExSolution {
@@ -26,7 +24,7 @@ public class Day07Ex1 implements ExSolution {
 		
 		String values = dataFetcher.fetch(7).trim();
 		
-		StepQueue<Step> steps = new StepQueue<>(StreamEx.split(values, "\n")
+		/*StepQueue<Step> steps = new StepQueue<>(StreamEx.split(values, "\n")
 				.map(LINE_PATTERN::matcher)
 				.filter(Matcher::matches)
 				.flatMap(matcher -> {
@@ -40,7 +38,7 @@ public class Day07Ex1 implements ExSolution {
 		
 		System.out.println(StreamEx.of(steps)
 				.map(Step::getId)
-				.joining());
+				.joining());*/
 	}
 	
 }
