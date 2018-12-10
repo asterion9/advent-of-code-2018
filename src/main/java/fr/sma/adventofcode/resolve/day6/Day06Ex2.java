@@ -2,7 +2,6 @@ package fr.sma.adventofcode.resolve.day6;
 
 import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import one.util.streamex.IntCollector;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
@@ -10,15 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Component
 public class Day06Ex2 implements ExSolution {
