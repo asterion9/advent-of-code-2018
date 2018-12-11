@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
-public class Day10Ex1 implements ExSolution {
+public class Day10Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private final static Pattern LINE_PATTERN = Pattern.compile("position=< *(-?\\d+), *(-?\\d+)> velocity=< *(-?\\d+), *(-?\\d+)>");
@@ -25,7 +25,7 @@ public class Day10Ex1 implements ExSolution {
 	
 	@Override
 	public void run() throws Exception {
-		System.out.println("Day10Ex1");
+		System.out.println("Day10Ex2");
 		
 		String values = dataFetcher.fetch(10).trim();
 		
@@ -44,7 +44,7 @@ public class Day10Ex1 implements ExSolution {
 		
 		int time = findMin(0, 20000, sky::calculateStarArea);
 		
-		System.out.println(sky.printSky(time));
+		System.out.println("time = " + time);
 	}
 	
 	private int findMin(int start, int end, Function<Integer, Double> f) {
