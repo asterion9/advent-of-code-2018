@@ -1,8 +1,10 @@
 package fr.sma.adventofcode.resolve.day11;
 
+import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,17 +12,19 @@ import org.springframework.stereotype.Component;
 public class Day11Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Value("${input}")
-	private int input;
+	@Autowired
+	private DataFetcher dataFetcher;
 	
 	@Override
 	public void run() throws Exception {
 		System.out.println("Day11Ex1");
 		
-		Grid grid = new Grid(input, 300);
+		String value = dataFetcher.fetch(11).trim();
+		
+		int gridSerial = Integer.parseInt(value);
+		
+		Grid grid = new Grid(gridSerial, 300);
 		
 		System.out.println(grid.findMaxScanArea(3));
 	}
-	
-	
 }
