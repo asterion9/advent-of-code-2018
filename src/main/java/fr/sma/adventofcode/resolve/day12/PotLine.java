@@ -1,9 +1,10 @@
 package fr.sma.adventofcode.resolve.day12;
 
-import java.util.Map;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.LongStreamEx;
 import one.util.streamex.StreamEx;
+
+import java.util.Map;
 
 class PotLine {
 	private final String pots;

@@ -2,16 +2,17 @@ package fr.sma.adventofcode.resolve.day12;
 
 import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class Day12Ex2 implements ExSolution {
@@ -45,16 +46,21 @@ public class Day12Ex2 implements ExSolution {
 		GrowthPredictor.Builder builder = new GrowthPredictor.Builder();
 		
 		StreamEx.iterate(new PotLine(pots, 0, 0), s -> s.grow(rules))
-				.takeWhile()
+				.skip(200)
+				.findFirst(builder::addPotLine);
+		
+		GrowthPredictor growthPredictor = builder.build();
+		
+		System.out.println(growthPredictor.getPotLineAtYear(50_000_000_000L).potSum());
 	}
 	
 	private static class GrowthPredictor {
 		private final List<PotLine> cycle;
 		private final long offsetCycleChange;
 		
-		public GrowthPredictor(List<PotLine> cycle) {
+		public GrowthPredictor(List<PotLine> cycle, long offsetCycleChange) {
 			this.cycle = cycle;
-			this.offsetCycleChange = cycle.get(cycle.size()-1).getOffset() - cycle.get(0).getOffset();
+			this.offsetCycleChange = offsetCycleChange;
 		}
 		
 		public PotLine getPotLineAtYear(long year) {
@@ -74,9 +80,13 @@ public class Day12Ex2 implements ExSolution {
 			}
 			
 			public boolean addPotLine(PotLine next) {
+				if (cycleIndex != -1) {
+					return true;
+				}
 				cycleIndex = findSamePattern(next);
 				
 				if (cycleIndex != -1) {
+					pots.add(next);
 					return true;
 				} else {
 					pots.add(next);
@@ -88,12 +98,12 @@ public class Day12Ex2 implements ExSolution {
 				if (cycleIndex == -1) {
 					throw new IllegalStateException("cycle not found yet");
 				}
-				return new GrowthPredictor(pots.subList(cycleIndex, pots.size()));
+				return new GrowthPredictor(pots.subList(cycleIndex, pots.size()-1), pots.get(pots.size() -1).getOffset() - pots.get(cycleIndex).getOffset());
 			}
 			
 			private int findSamePattern(PotLine other) {
 				return StreamEx.of(pots)
-						.findFirst(other::equals)
+						.findFirst(other::hasSamePattern)
 						.map(pots::indexOf)
 						.orElse(-1);
 			}
