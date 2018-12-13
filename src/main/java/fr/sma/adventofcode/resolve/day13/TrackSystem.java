@@ -1,20 +1,17 @@
 package fr.sma.adventofcode.resolve.day13;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.HeadlessException;
+import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
+import org.apache.logging.log4j.util.TriConsumer;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import one.util.streamex.EntryStream;
-import one.util.streamex.StreamEx;
-import org.apache.logging.log4j.util.TriConsumer;
 
 public class TrackSystem {
 	private final TrackType[][] area;
@@ -46,7 +43,7 @@ public class TrackSystem {
 	public Optional<Chariot> moveAll() {
 		StreamEx.of(chariots)
 				.sorted(Comparator.comparing(Chariot::getY).thenComparing(Chariot::getX))
-				.forEachOrdered(this::move);
+				.forEachOrdered(c -> c.move(area));
 		
 		return EntryStream.ofPairs(chariots).mapKeyValue((chariot1, chariot2) -> {
 					if (Chariot.areOnSameTrack(chariot1, chariot2)) {
@@ -58,26 +55,6 @@ public class TrackSystem {
 				.map(Optional::get)
 				.findFirst();
 				
-	}
-	
-	private void move(Chariot chariot) {
-		Direction nextMove = chariot.getNextMove();
-		switch (nextMove) {
-			case LEFT:
-				chariot.setX(chariot.getX()-1);
-				break;
-			case UP:
-				chariot.setY(chariot.getY()-1);
-				break;
-			case RIGHT:
-				chariot.setX(chariot.getX()+1);
-				break;
-			case DOWN:
-				chariot.setY(chariot.getY()+1);
-				break;
-		}
-		chariot.moveTo(nextMove);
-		chariot.setUnderTrack(area[chariot.getY()][chariot.getX()]);
 	}
 	
 	public static class Chariot {
@@ -127,7 +104,7 @@ public class TrackSystem {
 			this.underTrack = direction == Direction.LEFT || direction == Direction.RIGHT ? TrackType.HORIZONTAL : TrackType.VERTICAL;
 		}
 		
-		public Direction getNextMove() {
+		private Direction getNextMove() {
 			switch (underTrack) {
 				case VERTICAL:
 					return direction;
@@ -146,13 +123,31 @@ public class TrackSystem {
 			}
 		}
 		
-		private void moveTo(Direction direction) {
-			this.direction = direction;
-			intersectionDirectionOffest = (intersectionDirectionOffest) % 3 -1;
+		private Direction getNextIntersectionDirection() {
+			return direction.getTurnByQuarter(intersectionDirectionOffest);
 		}
 		
-		private Direction getNextIntersectionDirection() {
-			return Direction.values()[(this.direction.ordinal() + intersectionDirectionOffest) % Direction.values().length];
+		private void move(TrackType[][] area) {
+			Direction nextMove = this.getNextMove();
+			if (underTrack == TrackType.INTERSECTION) {
+				intersectionDirectionOffest = ((intersectionDirectionOffest+3)% 3) - 1;
+			}
+			switch (nextMove) {
+				case LEFT:
+					this.x--;
+					break;
+				case UP:
+					this.y--;
+					break;
+				case RIGHT:
+					this.x++;
+					break;
+				case DOWN:
+					this.y++;
+					break;
+			}
+			this.direction = nextMove;
+			underTrack = area[this.y][this.x];
 		}
 		
 		public void setX(int x) {
@@ -219,6 +214,10 @@ public class TrackSystem {
 		LEFT,
 		DOWN,
 		RIGHT;
+		
+		public Direction getTurnByQuarter(int quarterTurn) {
+			return Direction.values()[(this.ordinal()+quarterTurn+Direction.values().length)%Direction.values().length];
+		}
 	}
 	
 	public TrackSystemPainter getPainter() {
@@ -273,6 +272,7 @@ public class TrackSystem {
 			};
 			drawPanel.setBackground(Color.white);
 			this.setSize(new Dimension(size.width + 250, size.height + 50));
+			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.add(drawPanel);
 			this.setVisible(true);
 		}

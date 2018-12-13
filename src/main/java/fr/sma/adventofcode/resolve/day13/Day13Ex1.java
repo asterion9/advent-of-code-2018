@@ -2,12 +2,13 @@ package fr.sma.adventofcode.resolve.day13;
 
 import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.Optional;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class Day13Ex1 implements ExSolution {
@@ -30,7 +31,7 @@ public class Day13Ex1 implements ExSolution {
 				.peek(trackSystem1 -> painter.repaint())
 				.peek(trackSystem1 -> {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -42,6 +43,4 @@ public class Day13Ex1 implements ExSolution {
 		
 		System.out.println(collidingChariot.getX() + "," + collidingChariot.getY());
 	}
-	
-	
 }
