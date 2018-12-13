@@ -1,13 +1,20 @@
 package fr.sma.adventofcode.resolve.day13;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
+import org.apache.logging.log4j.util.TriConsumer;
 
 public class TrackSystem {
 	private final TrackType[][] area;
@@ -69,7 +76,7 @@ public class TrackSystem {
 				chariot.setY(chariot.getY()+1);
 				break;
 		}
-		chariot.setDirection(nextMove);
+		chariot.moveTo(nextMove);
 		chariot.setUnderTrack(area[chariot.getY()][chariot.getX()]);
 	}
 	
@@ -78,7 +85,7 @@ public class TrackSystem {
 		
 		private Direction direction;
 		
-		private int intersectionDirectionOffest = -1;
+		private int intersectionDirectionOffest = 1;
 		
 		private TrackType underTrack;
 		
@@ -139,8 +146,13 @@ public class TrackSystem {
 			}
 		}
 		
+		private void moveTo(Direction direction) {
+			this.direction = direction;
+			intersectionDirectionOffest = (intersectionDirectionOffest) % 3 -1;
+		}
+		
 		private Direction getNextIntersectionDirection() {
-			return Direction.values()[(this.direction.ordinal() + 1 + intersectionDirectionOffest) % Direction.values().length];
+			return Direction.values()[(this.direction.ordinal() + intersectionDirectionOffest) % Direction.values().length];
 		}
 		
 		public void setX(int x) {
@@ -203,9 +215,66 @@ public class TrackSystem {
 	}
 	
 	private enum Direction {
-		LEFT,
 		UP,
-		RIGHT,
-		DOWN;
+		LEFT,
+		DOWN,
+		RIGHT;
+	}
+	
+	public TrackSystemPainter getPainter() {
+		TrackSystemPainter trackSystemPainter = new TrackSystemPainter(this);
+		return trackSystemPainter;
+	}
+	
+	
+	public static class TrackSystemPainter extends JFrame {
+		private static final int scale = 5;
+		
+		private final Map<TrackType, TriConsumer<Integer, Integer, Graphics>> trackSprite = Map.of(
+				TrackType.VERTICAL, (x, y, g) -> g.drawLine(x + scale/2, y, x + scale/2, y + scale-1),
+				TrackType.HORIZONTAL, (x, y, g) -> g.drawLine(x, y + scale/2, x + scale-1, y + scale/2),
+				TrackType.CORNER_SLASH, (x, y, g) -> g.drawLine(x + scale-1, y, x, y + scale-1),
+				TrackType.CORNER_ANTI_SLASH, (x, y, g) -> g.drawLine(x + scale-1, y + scale-1, x, y),
+				TrackType.INTERSECTION, (x, y, g) -> {
+					g.drawLine(x, y + scale/2, x + scale-1, y + scale/2);
+					g.drawLine(x + scale/2, y, x + scale/2, y + scale-1);
+				},
+				TrackType.NONE, (x, y, g) -> {
+				}
+		);
+		
+		
+		private final JPanel drawPanel;
+		
+		private TrackSystemPainter(TrackSystem trackSystem) throws HeadlessException {
+			
+			
+			super("day13Ex1");
+			
+			Dimension size = new Dimension(trackSystem.area[0].length * scale, trackSystem.area.length * scale);
+			this.drawPanel = new JPanel() {
+				@Override
+				public void paintComponent(Graphics g) {
+					super.paintComponent(g);
+					g.setColor(Color.black);
+					for (int i = 0; i < trackSystem.area.length; i++) {
+						for (int j = 0; j < trackSystem.area[i].length; j++) {
+							trackSprite.getOrDefault(trackSystem.area[i][j], (x0, y0, g0) -> {
+							}).accept(j * scale, i * scale, g);
+						}
+					}
+					trackSystem.chariots.forEach(c -> {
+						Color oldColor = g.getColor();
+						g.setColor(Color.red);
+						g.drawRect(c.getX() * scale, c.getY() * scale, scale-1, scale-1);
+						g.setColor(oldColor);
+					});
+				}
+			};
+			drawPanel.setBackground(Color.white);
+			this.setSize(new Dimension(size.width + 250, size.height + 50));
+			this.add(drawPanel);
+			this.setVisible(true);
+		}
 	}
 }

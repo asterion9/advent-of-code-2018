@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class Day13Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	
 	@Autowired
 	private DataFetcher dataFetcher;
 	
@@ -25,7 +24,17 @@ public class Day13Ex1 implements ExSolution {
 		
 		TrackSystem trackSystem = TrackSystem.buildTrackSystem(values);
 		
+		TrackSystem.TrackSystemPainter painter = trackSystem.getPainter();
+		
 		TrackSystem.Chariot collidingChariot = StreamEx.generate(() -> trackSystem)
+				.peek(trackSystem1 -> painter.repaint())
+				.peek(trackSystem1 -> {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				})
 				.map(TrackSystem::moveAll)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
