@@ -1,5 +1,6 @@
 package fr.sma.adventofcode.resolve.day13;
 
+import com.google.common.collect.Sets;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,12 +9,13 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.swing.JFrame;
@@ -25,15 +27,21 @@ import org.apache.logging.log4j.util.TriConsumer;
 
 public class TrackSystem {
 	private final TrackType[][] area;
-	private final List<Chariot> chariots;
+	private final Set<Chariot> chariots;
+	private final Set<Chariot> collidedChariots;
 	
-	private TrackSystem(TrackType[][] area, List<Chariot> chariots) {
+	private TrackSystem(TrackType[][] area, Set<Chariot> chariots) {
 		this.area = area;
 		this.chariots = chariots;
+		this.collidedChariots = new HashSet<>();
+	}
+	
+	public Set<Chariot> getRemaingChariot() {
+		return Sets.difference(chariots, collidedChariots);
 	}
 	
 	public static TrackSystem buildTrackSystem(String trackMap) {
-		List<Chariot> chariots = new ArrayList<>();
+		Set<Chariot> chariots = new HashSet<>();
 		
 		TrackType[][] area = EntryStream.of(trackMap.split("\n"))
 				.mapToValue((y, l) ->
@@ -51,15 +59,18 @@ public class TrackSystem {
 	}
 	
 	public List<Chariot> moveAll() {
-		return StreamEx.of(chariots)
+		List<Chariot> collidedThisTick = StreamEx.of(chariots)
 				.sorted(Comparator.comparing(Chariot::getY).thenComparing(Chariot::getX))
+				.filter(c -> !collidedChariots.contains(c))
 				.peek(c -> c.move(area))
 				.cross(chariots)
 				.filterKeyValue((chariot, chariot2) -> chariot != chariot2)
 				.filterKeyValue(Chariot::areOnSameTrack)
 				.flatMapKeyValue(StreamEx::of)
+				.peek(collidedChariots::add)
 				.collect(Collectors.toList());
-				
+		chariots.removeAll(collidedThisTick);
+		return collidedThisTick;
 	}
 	
 	public static class Chariot {
@@ -123,9 +134,20 @@ public class TrackSystem {
 					return getNextIntersectionDirection();
 				case NONE:
 				default:
-					throw new IllegalStateException("can't move if not over a track");
+					throw new IllegalStateException("can't move if not over a track" + this);
 					
 			}
+		}
+		
+		@Override
+		public String toString() {
+			return "Chariot{" +
+					"x=" + x +
+					", y=" + y +
+					", direction=" + direction +
+					", intersectionDirectionOffest=" + intersectionDirectionOffest +
+					", underTrack=" + underTrack +
+					'}';
 		}
 		
 		private Direction getNextIntersectionDirection() {
@@ -251,6 +273,8 @@ public class TrackSystem {
 				StreamEx.of(Direction.values())
 				.toMap(Function.identity(), this::createChariotImage);
 		
+		private final BufferedImage chariotCollision = createChariotCollision();
+		
 		private final JPanel drawPanel;
 		
 		private TrackSystemPainter(TrackSystem trackSystem) throws HeadlessException {
@@ -272,6 +296,9 @@ public class TrackSystem {
 						Image sprite = chariotSprites.get(c.direction);
 						g.drawImage(sprite, c.getX() * scale - 1, c.getY() * scale - 1, (img, infoflags, x, y, width, height) -> false);
 					});
+					trackSystem.collidedChariots.forEach(c ->
+							g.drawImage(chariotCollision, c.getX() * scale - 1, c.getY() * scale - 1, (img, infoflags, x, y, width, height) -> false)
+					);
 				}
 			};
 			drawPanel.setBackground(Color.white);
@@ -292,6 +319,25 @@ public class TrackSystem {
 			
 			Graphics2D chariotGraphic = upChariot.createGraphics();
 			drawArrow(chariotGraphic, direction);
+			chariotGraphic.dispose();
+			return upChariot;
+		}
+		
+		private BufferedImage createChariotCollision() {
+			BufferedImage upChariot = new BufferedImage(scale + 2, scale + 2, BufferedImage.TYPE_BYTE_BINARY,
+					new IndexColorModel(1, 2,
+							new byte[]{0x00, (byte) 0x00},
+							new byte[]{0x00, (byte) 0xdd},
+							new byte[]{0x00, (byte) 0x00},
+							new byte[]{0x00, (byte) 0xff})
+			);
+			
+			Graphics2D chariotGraphic = upChariot.createGraphics();
+			chariotGraphic.fillRect(0, 0, scale+2, scale+2);
+/*
+			chariotGraphic.drawLine(0, 0, scale+2, scale+2);
+			chariotGraphic.drawLine(0, scale+2, scale+2, 0);
+*/
 			chariotGraphic.dispose();
 			return upChariot;
 		}
