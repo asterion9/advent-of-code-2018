@@ -25,8 +25,8 @@ public class Day14Ex1 implements ExSolution {
 		int v1, v2;
 		
 		while (recipesBoard.length() < targetSize + 10) {
-			v1 = Integer.parseInt(recipesBoard.charAt(index1) + "");
-			v2 = Integer.parseInt(recipesBoard.charAt(index2) + "");
+			v1 = recipesBoard.charAt(index1)-'0';
+			v2 = recipesBoard.charAt(index2)-'0';
 			recipesBoard.append(v1+v2);
 			index1 = (index1 + v1 + 1) % recipesBoard.length();
 			index2 = (index2 + v2 + 1) % recipesBoard.length();
