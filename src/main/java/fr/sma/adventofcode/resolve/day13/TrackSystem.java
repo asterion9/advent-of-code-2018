@@ -1,17 +1,27 @@
 package fr.sma.adventofcode.resolve.day13;
 
-import one.util.streamex.EntryStream;
-import one.util.streamex.StreamEx;
-import org.apache.logging.log4j.util.TriConsumer;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
+import org.apache.logging.log4j.util.TriConsumer;
 
 public class TrackSystem {
 	private final TrackType[][] area;
@@ -40,20 +50,15 @@ public class TrackSystem {
 		return new TrackSystem(area, chariots);
 	}
 	
-	public Optional<Chariot> moveAll() {
-		StreamEx.of(chariots)
+	public List<Chariot> moveAll() {
+		return StreamEx.of(chariots)
 				.sorted(Comparator.comparing(Chariot::getY).thenComparing(Chariot::getX))
-				.forEachOrdered(c -> c.move(area));
-		
-		return EntryStream.ofPairs(chariots).mapKeyValue((chariot1, chariot2) -> {
-					if (Chariot.areOnSameTrack(chariot1, chariot2)) {
-						return Optional.of(chariot1);
-					} else {
-						return Optional.<Chariot>empty();
-					}
-				}).filter(Optional::isPresent)
-				.map(Optional::get)
-				.findFirst();
+				.peek(c -> c.move(area))
+				.cross(chariots)
+				.filterKeyValue((chariot, chariot2) -> chariot != chariot2)
+				.filterKeyValue(Chariot::areOnSameTrack)
+				.flatMapKeyValue(StreamEx::of)
+				.collect(Collectors.toList());
 				
 	}
 	
@@ -242,12 +247,13 @@ public class TrackSystem {
 				}
 		);
 		
+		private final Map<Direction, BufferedImage> chariotSprites =
+				StreamEx.of(Direction.values())
+				.toMap(Function.identity(), this::createChariotImage);
 		
 		private final JPanel drawPanel;
 		
 		private TrackSystemPainter(TrackSystem trackSystem) throws HeadlessException {
-			
-			
 			super("day13Ex1");
 			
 			Dimension size = new Dimension(trackSystem.area[0].length * scale, trackSystem.area.length * scale);
@@ -263,10 +269,8 @@ public class TrackSystem {
 						}
 					}
 					trackSystem.chariots.forEach(c -> {
-						Color oldColor = g.getColor();
-						g.setColor(Color.red);
-						g.drawRect(c.getX() * scale, c.getY() * scale, scale-1, scale-1);
-						g.setColor(oldColor);
+						Image sprite = chariotSprites.get(c.direction);
+						g.drawImage(sprite, c.getX() * scale - 1, c.getY() * scale - 1, (img, infoflags, x, y, width, height) -> false);
 					});
 				}
 			};
@@ -275,6 +279,40 @@ public class TrackSystem {
 			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.add(drawPanel);
 			this.setVisible(true);
+		}
+		
+		private BufferedImage createChariotImage(Direction direction) {
+			BufferedImage upChariot = new BufferedImage(scale + 2, scale + 2, BufferedImage.TYPE_BYTE_BINARY,
+					new IndexColorModel(1, 2,
+							new byte[]{0x00, (byte) 0xff},
+							new byte[]{0x00, (byte) 0x00},
+							new byte[]{0x00, (byte) 0x00},
+							new byte[]{0x00, (byte) 0xff})
+			);
+			
+			Graphics2D chariotGraphic = upChariot.createGraphics();
+			drawArrow(chariotGraphic, direction);
+			chariotGraphic.dispose();
+			return upChariot;
+		}
+		
+		private void drawArrow(Graphics g, Direction direction) {
+			g.setColor(new Color(0xff0000));
+			switch (direction) {
+				case UP:
+					g.fillPolygon(new int[]{(scale+2) / 2, scale +1, 0}, new int[]{0, scale + 1, scale + 1}, 3);
+					break;
+				case LEFT:
+					g.fillPolygon(new int[]{0, scale + 1, scale + 1}, new int[]{(scale+2) / 2, scale +1, 0}, 3);
+					break;
+				case DOWN:
+					g.fillPolygon(new int[]{0, scale + 1, (scale+2) / 2}, new int[]{0, 0, scale +1}, 3);
+					break;
+				case RIGHT:
+					g.fillPolygon(new int[]{0, scale +1, 0}, new int[]{0, (scale+2) / 2, scale + 1}, 3);
+					break;
+			}
+			return;
 		}
 	}
 }

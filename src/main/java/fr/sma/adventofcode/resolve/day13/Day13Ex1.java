@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class Day13Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,15 +29,15 @@ public class Day13Ex1 implements ExSolution {
 				.peek(trackSystem1 -> painter.repaint())
 				.peek(trackSystem1 -> {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(20);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				})
-				.map(TrackSystem::moveAll)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.flatCollection(TrackSystem::moveAll)
 				.findFirst().get();
+		
+		painter.repaint();
 		
 		System.out.println(collidingChariot.getX() + "," + collidingChariot.getY());
 	}
