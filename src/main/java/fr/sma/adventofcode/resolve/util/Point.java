@@ -1,6 +1,8 @@
 package fr.sma.adventofcode.resolve.util;
 
 import java.util.Optional;
+import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
 
 public class Point {
 	private final int x;
@@ -33,5 +35,13 @@ public class Point {
 		return "(" + x +
 				", " + y +
 				')';
+	}
+	
+	
+	
+	public StreamEx<Point> around(int size) {
+		return IntStreamEx.rangeClosed(y - size, y + size)
+				.flatMapToObj(y -> IntStreamEx.rangeClosed(x - (size - Math.abs(y-this.y)), x + (size - Math.abs(y-this.y)), Math.max(1, 2*size))
+						.mapToObj(x -> new Point(x, y)));
 	}
 }
