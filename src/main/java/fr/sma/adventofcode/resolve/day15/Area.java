@@ -1,9 +1,9 @@
 package fr.sma.adventofcode.resolve.day15;
 
+import static fr.sma.adventofcode.resolve.day15.Element.Type.ELF;
+import static fr.sma.adventofcode.resolve.day15.Element.Type.EMPTY;
+import static fr.sma.adventofcode.resolve.day15.Element.Type.GOBELIN;
 import fr.sma.adventofcode.resolve.util.Point;
-import one.util.streamex.EntryStream;
-import one.util.streamex.IntStreamEx;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
@@ -12,11 +12,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static fr.sma.adventofcode.resolve.day15.Element.Type.ELF;
-import static fr.sma.adventofcode.resolve.day15.Element.Type.EMPTY;
-import static fr.sma.adventofcode.resolve.day15.Element.Type.GOBELIN;
+import java.util.concurrent.atomic.AtomicBoolean;
+import one.util.streamex.EntryStream;
+import one.util.streamex.IntStreamEx;
 
 public class Area {
 	private Element[][] area;
@@ -52,17 +50,24 @@ public class Area {
 		return new Area(areaElements, allUnits);
 	}
 	
-	public Set<Unit> doTurn() {
-		return EntryStream.of(allUnits)// for each active unit
+	public boolean doTurn() {
+		AtomicBoolean endOfBattle = new AtomicBoolean(false);
+		EntryStream.of(allUnits)// for each active unit
 				.sortedBy(Map.Entry::getValue) //sorted by reading order
 				.filterKeys(unit -> !deadUnits.contains(unit)) // filter out unit that are dead
+				.filter(e -> !endOfBattle.get())
+				.peek(e -> endOfBattle.set(isBattleFinished()))
 				.mapToValue((u, p) -> getPathToTarget(new NodePoint(p, null), buildDistanceMap(p), u.getTargetType()) // get the path to the target
 							.map(NodePoint::getPoints))
 				.flatMapValues(Optional::stream)
 				.filterValues(this::moveToward)
-				.mapKeyValue((unit, path) -> attack(unit, path.getFirst()))
-				.flatMap(Optional::stream)
-				.collect(Collectors.toSet());
+				.forKeyValue((unit, path) -> attack(unit));
+		
+		return endOfBattle.get();
+	}
+	
+	private boolean isBattleFinished() {
+		return getHp(ELF) <= 0 || getHp(GOBELIN) <= 0;
 	}
 	
 	public int getHp(Element.Type type) {
@@ -81,6 +86,7 @@ public class Area {
 								.map(Element::getType)
 								.map(Element.Type::getSymbol)
 								.append(EntryStream.of(allUnits)
+										.filterKeys(u -> !deadUnits.contains(u))
 										.filterValues(p -> p.getY() == y)
 										.map(e -> e.getKey().toString())
 										.joining(" ", "  ", "")
@@ -101,15 +107,25 @@ public class Area {
 		return path.size() <= 2;
 	}
 	
-	private Optional<Unit> attack(Unit attacker, Point target) {
-		Unit targetUnit = ((Unit)area[target.getX()][target.getY()]);
-		targetUnit.setHp(targetUnit.getHp() - attacker.getAttackPoint()); //decrease its hp
-		if(targetUnit.getHp() <= 0) {
-			deadUnits.add(targetUnit);
-			area[target.getX()][target.getY()] = NonInteractiveElements.EMPTY;
-			return Optional.of(targetUnit);
-		}
-		return Optional.empty();
+	private Optional<Unit> attack(Unit attacker) {
+		Point from = allUnits.get(attacker);
+		return from.around(1)
+				.map(p -> p.getIn(area))
+				.flatMap(Optional::stream)
+				.filterBy(Element::getType, attacker.getTargetType())
+				.map(e -> ((Unit)e))
+				.min(Comparator.comparing(Unit::getHp))
+				.map(target -> {
+					Point to = allUnits.get(target);
+					target.setHp(target.getHp() - attacker.getAttackPoint()); //decrease its hp
+					if(target.getHp() <= 0) {
+						deadUnits.add(target);
+						target.setHp(0);
+						area[to.getX()][to.getY()] = NonInteractiveElements.EMPTY;
+						return target;
+					}
+					return null;
+				});
 	}
 	
 	private Optional<NodePoint> getPathToTarget(NodePoint from, Integer[][] distanceMap, Element.Type targetElement) {
