@@ -21,16 +21,16 @@ public interface Element {
 	
 	public Type getType();
 	
-	public static Element build(String s) {
+	public static Element build(String s, int elfAp) {
 		switch (s){
 			case "#":
 				return NonInteractiveElements.WALL;
 			case ".":
 				return NonInteractiveElements.EMPTY;
 			case "E":
-				return new Unit( Type.ELF);
+				return new Unit( Type.ELF, elfAp);
 			case "G":
-				return new Unit(Type.GOBELIN);
+				return new Unit(Type.GOBELIN, 3);
 			default:
 				throw new IllegalArgumentException("can't parse string " + s);
 		}

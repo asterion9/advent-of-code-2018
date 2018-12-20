@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import one.util.streamex.EntryStream;
 import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
 
 public class Area {
 	private Element[][] area;
@@ -27,13 +28,13 @@ public class Area {
 		this.deadUnits = new HashSet<>();
 	}
 	
-	public static Area buildArea(String data) {
+	public static Area buildArea(String data, int elfAp) {
 		Map<Unit, Point> allUnits = new HashMap<>();
 		
 		Element[][] elements = EntryStream.of(data.split("\n"))
 				.mapToValue((y, l) ->
 						EntryStream.of(l.split(""))
-								.mapToValue((x, s) -> Element.build(s))
+								.mapToValue((x, s) -> Element.build(s, elfAp))
 								.peekKeyValue((x, element) -> Optional.of(element)
 										.filter(e -> e.getType() == ELF || e.getType() == GOBELIN)
 										.map(e -> (Unit) e)
@@ -105,6 +106,12 @@ public class Area {
 			allUnits.put(u, to);
 		}
 		return path.size() <= 2;
+	}
+	
+	public int getNbDead(Element.Type type) {
+		return (int) StreamEx.of(deadUnits)
+				.filterBy(Unit::getType, type)
+				.count();
 	}
 	
 	private Optional<Unit> attack(Unit attacker) {

@@ -5,10 +5,10 @@ public class Unit implements Element {
 	private final Type type;
 	private final int attackPoint;
 	
-	public Unit(Type type) {
+	public Unit(Type type, int ap) {
 		this.type = type;
 		this.hp = 200;
-		this.attackPoint = 3;
+		this.attackPoint = ap;
 	}
 	
 	public Type getTargetType() {

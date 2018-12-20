@@ -20,13 +20,13 @@ public class Day15Ex1 implements ExSolution {
 		
 		String values = dataFetcher.fetch(15).trim();
 		
-		Area area = Area.buildArea(values);
+		Area area = Area.buildArea(values, 3);
 		System.out.println(area.drawMap());
 		int turn = 0;
 		while (!area.doTurn()){
 			turn++;
 			System.out.println("end of turn " + turn);
-			System.out.println(area.drawMap());
+			//System.out.println(area.drawMap());
 		}
 		System.out.println(area.drawMap());
 		System.out.println("outcome : " + Math.max(area.getHp(Element.Type.ELF), area.getHp(Element.Type.GOBELIN)) * turn);
