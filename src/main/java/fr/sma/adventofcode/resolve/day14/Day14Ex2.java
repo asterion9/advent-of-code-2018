@@ -1,7 +1,7 @@
 package fr.sma.adventofcode.resolve.day14;
 
 import com.google.common.primitives.Bytes;
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import java.util.Arrays;
 import one.util.streamex.StreamEx;

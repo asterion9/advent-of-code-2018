@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day13;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import java.util.Collection;
 import one.util.streamex.StreamEx;

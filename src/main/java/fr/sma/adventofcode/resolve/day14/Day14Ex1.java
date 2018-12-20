@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day14;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

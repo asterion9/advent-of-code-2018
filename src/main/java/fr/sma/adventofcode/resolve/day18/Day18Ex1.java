@@ -1,7 +1,7 @@
 package fr.sma.adventofcode.resolve.day18;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,15 @@
 package fr.sma.adventofcode.resolve.day16;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
+import one.util.streamex.EntryStream;
+import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -11,13 +19,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import one.util.streamex.EntryStream;
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 public class Day16Ex2 implements ExSolution {

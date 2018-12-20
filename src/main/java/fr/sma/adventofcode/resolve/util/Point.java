@@ -1,10 +1,15 @@
 package fr.sma.adventofcode.resolve.util;
 
-import java.util.Optional;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 
-public class Point {
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Optional;
+
+public class Point implements Comparable<Point> {
+	public static final Comparator<Point> comparator = Comparator.comparing(Point::getY).thenComparing(Point::getX);
+	
 	private final int x;
 	private final int y;
 	
@@ -13,35 +18,54 @@ public class Point {
 		this.y = y;
 	}
 	
+	public StreamEx<Point> around(int radius) {
+		return IntStreamEx.rangeClosed(getY() - radius, getY() + radius, 1)
+				.flatMapToObj(y -> IntStreamEx.rangeClosed(
+						getX() - (radius - Math.abs(getY()-y)),
+						getX() + (radius - Math.abs(getY()-y)),
+						Math.max(2*(radius - Math.abs(getY()-y)), 1)
+				).mapToObj(x -> new Point(x, y)));
+	}
+	
+	public <T> Optional<T> getIn(T[][] array) {
+		if (getX()<0 || getY() < 0 || getX() >= array.length || getY() >= array[getX()].length) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(array[getX()][getY()]);
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
 	public int getY() {
 		return y;
 	}
 	
-	public int getX() {
-	
-		return x;
+	@Override
+	public int compareTo(Point o) {
+		return comparator.compare(this, o);
 	}
 	
-	public <T> Optional<T> getIn(T[][] table) {
-		if (x >= 0 && x < table.length && y >= 0 && y < table[x].length) {
-			return Optional.of(table[x][y]);
-		} else {
-			return Optional.empty();
-		}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Point)) return false;
+		Point point = (Point) o;
+		return x == point.x &&
+				y == point.y;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
 	}
 	
 	@Override
 	public String toString() {
-		return "(" + x +
-				", " + y +
-				')';
-	}
-	
-	
-	
-	public StreamEx<Point> around(int size) {
-		return IntStreamEx.rangeClosed(y - size, y + size)
-				.flatMapToObj(y -> IntStreamEx.rangeClosed(x - (size - Math.abs(y-this.y)), x + (size - Math.abs(y-this.y)), Math.max(1, 2*size))
-						.mapToObj(x -> new Point(x, y)));
+		return "Point{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
 	}
 }

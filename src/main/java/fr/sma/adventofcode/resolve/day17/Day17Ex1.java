@@ -1,7 +1,7 @@
 package fr.sma.adventofcode.resolve.day17;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.util.Point;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day2;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;

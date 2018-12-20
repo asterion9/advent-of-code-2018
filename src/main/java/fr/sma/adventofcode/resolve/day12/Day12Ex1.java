@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day12;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import java.util.Map;
 import java.util.regex.Matcher;

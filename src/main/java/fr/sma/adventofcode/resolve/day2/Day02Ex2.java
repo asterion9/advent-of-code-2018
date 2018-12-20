@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day2;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class Day02Ex2 implements ExSolution {
 		PairDistance distance = leftDistance.distance < rightDistance.distance ? leftDistance : rightDistance;
 		
 		List<String> strip = ids.stream()
-				.filter(id -> distance(ids.get(midPointIndex), id).getDistance() < distance.getDistance())
+				.filter(id -> distance(ids.getIn(midPointIndex), id).getDistance() < distance.getDistance())
 				.collect(Collectors.toList());
 	}*/
 	

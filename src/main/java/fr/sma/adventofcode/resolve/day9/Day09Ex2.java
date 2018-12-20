@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day9;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import one.util.streamex.LongStreamEx;
 import org.slf4j.Logger;

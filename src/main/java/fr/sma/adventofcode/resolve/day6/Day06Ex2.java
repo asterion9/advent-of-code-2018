@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day6;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;

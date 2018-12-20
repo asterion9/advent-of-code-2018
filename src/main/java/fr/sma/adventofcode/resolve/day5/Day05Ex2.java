@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day5;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
@@ -39,7 +39,7 @@ public class Day05Ex2 implements ExSolution {
 	public void polymerize(ArrayList<String> polymer) {
 		int index = 0;
 		while(index < polymer.size() - 1) {
-			//String line = (index > 0 ? polymer.get(index -1): ".") + polymer.get(index) + polymer.get(index +1)+ (index polymer.get(index +2);
+			//String line = (index > 0 ? polymer.getIn(index -1): ".") + polymer.getIn(index) + polymer.getIn(index +1)+ (index polymer.getIn(index +2);
 			if(doReact(polymer.get(index), polymer.get(index + 1))) {
 				//logger.debug(line + " match !");
 				polymer.remove(index);

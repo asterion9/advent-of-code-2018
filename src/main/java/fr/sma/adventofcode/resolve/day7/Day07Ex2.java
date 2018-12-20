@@ -1,15 +1,10 @@
 package fr.sma.adventofcode.resolve.day7;
 
-import fr.sma.adventofcode.resolve.DataFetcher;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Optional;
 import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +70,7 @@ public class Day07Ex2 implements ExSolution {
 			return workers.stream() //ordered stream
 					.peek(w -> callBack.accept(w.getWork())) // end task
 					.peek(workers::remove) // remove worker
-					.mapToInt(Worker::getBlockUntil) // get its end time
+					.mapToInt(Worker::getBlockUntil) // getIn its end time
 					.findFirst() // for the first one
 					.orElse(0);
 		}
