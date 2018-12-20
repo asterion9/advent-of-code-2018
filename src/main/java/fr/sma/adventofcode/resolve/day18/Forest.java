@@ -1,16 +1,13 @@
 package fr.sma.adventofcode.resolve.day18;
 
-import fr.sma.adventofcode.resolve.util.Point;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.function.Predicate;
 import one.util.streamex.StreamEx;
 
 public class Forest {
 	public enum Landscape {
-		TREE("|"),
 		OPEN("."),
+		TREE("|"),
 		LUMBER("#");
 		
 		private final String symbol;
@@ -30,54 +27,101 @@ public class Forest {
 					.orElseThrow();
 		}
 		
-		public Landscape getNext(Map<Landscape, Long> counts) {
-			return evolutionRules.get(this).apply(counts);
-		}
-		
-		public static final Map<Landscape, Function<Map<Landscape, Long>, Landscape>> evolutionRules = Map.of(
-				TREE, counts -> Optional.ofNullable(counts.get(LUMBER)).filter(lum -> lum >= 3).map(l -> LUMBER).orElse(TREE),
-				OPEN, counts -> Optional.ofNullable(counts.get(TREE)).filter(tree -> tree >= 3).map(l -> TREE).orElse(OPEN),
-				LUMBER, counts -> counts.containsKey(LUMBER) && counts.containsKey(TREE) ? LUMBER : OPEN
-		);
+		public static final Predicate<int[]>[] evolutionRules = new Predicate[]{
+				(Predicate<int[]>) counts -> counts[TREE.ordinal()] >= 3,
+				(Predicate<int[]>) counts -> counts[LUMBER.ordinal()] >= 3,
+				(Predicate<int[]>) counts -> counts[TREE.ordinal()] == 0 || counts[LUMBER.ordinal()] == 0
+		};
 	}
 	
-	private Landscape[][] curForest;
-	private Landscape[][] nextForest;
+	private int[][] curForest;
 	
-	private Forest(Landscape[][] curForest) {
+	private final int minute;
+	
+	public Forest(Forest forest, int minute) {
+		this(StreamEx.of(forest.curForest)
+				.map(line -> Arrays.copyOf(line, line.length))
+				.toArray(new int[0][0]), minute);
+	}
+	
+	private Forest(int[][] curForest, int minute) {
 		this.curForest = curForest;
-		nextForest = new Landscape[curForest[0].length][curForest.length];
+		this.minute = minute;
 	}
 	
 	public static Forest build(String values) {
-		Landscape[][] landscapes = StreamEx.split(values, "\n")
+		int[][] landscapes = StreamEx.split(values, "\n")
 				.map(l -> StreamEx.split(l, "")
 						.map(Landscape::get)
-						.toArray(Landscape.class)
-				).toArray(new Landscape[0][0]);
+						.mapToInt(Landscape::ordinal)
+						.toArray()
+				).toArray(new int[0][0]);
 		
-		Landscape[][] forest = new Landscape[landscapes[0].length][landscapes.length];
+		int[][] forest = new int[landscapes[0].length][landscapes.length];
 		
 		for (int x = 0; x < forest.length; x++) {
 			for (int y = 0; y < forest[x].length; y++) {
 				forest[x][y] = landscapes[y][x];
 			}
 		}
-		return new Forest(forest);
+		return new Forest(forest, 0);
 	}
 	
-	private Landscape predict(Point point) {
-		Map<Landscape, Long> landscapeCount = point.around(1).map(p -> p.getIn(curForest))
-				.flatMap(Optional::stream)
-				.groupingBy(Function.identity(), Collectors.counting());
-		return curForest[point.getX()][point.getY()].getNext(landscapeCount);
+	public int getMinute() {
+		return minute;
 	}
 	
-	public void doTurn() {
-		for (int x = 0; x < curForest.length; x++) {
-			for (int y = 0; y < curForest[0].length; y++) {
-			
+	private int predict(int x0, int y0) {
+		int[] counts = new int[3];
+		for (int y = y0-1 ; y <= y0+1 ; y++) {
+			for (int x=x0-1; x<=x0+1; x++) {
+				if (x<0 || y < 0 || x >= curForest.length || y >= curForest[x].length) {
+					continue;
+				}
+				if (x != x0 || y != y0){
+					counts[curForest[x][y]]++;
+				}
 			}
 		}
+		if (Landscape.evolutionRules[curForest[x0][y0]].test(counts)) {
+			return (curForest[x0][y0] +1) % 3;
+		}
+		return curForest[x0][y0];
+	}
+	
+	public Forest getNextMinute() {
+		int[][] nextForest = new int[curForest.length][curForest[0].length];
+		for (int x = 0; x < curForest.length; x++) {
+			for (int y = 0; y < curForest[0].length; y++) {
+				nextForest[x][y] = predict(x, y);
+			}
+		}
+		return new Forest(nextForest, minute + 1);
+	}
+	
+	public Landscape[][] getForest() {
+		Landscape[][] forest = new Landscape[curForest.length][curForest[0].length];
+		for (int x = 0; x < curForest.length; x++) {
+			for (int y = 0; y < curForest[x].length; y++) {
+				forest[x][y] = Landscape.values()[curForest[x][y]];
+			}
+		}
+		return forest;
+	}
+	
+	public String printForest() {
+		StringBuilder sb = new StringBuilder();
+		Landscape[][] forest = getForest();
+		for (int y = 0; y < forest[0].length; y++) {
+			for (int x = 0; x < forest.length; x++) {
+				sb.append(forest[x][y].symbol);
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
+	public boolean hasSamePattern(Forest other) {
+		return Arrays.deepEquals(curForest, other.curForest);
 	}
 }
