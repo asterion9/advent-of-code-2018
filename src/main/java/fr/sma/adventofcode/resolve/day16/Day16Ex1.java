@@ -32,7 +32,7 @@ public class Day16Ex1 implements ExSolution {
 		long nbOpeMatchThreeOrMore = StreamEx.of(instructionMatcher.results())
 				.map(MatchResult::group)
 				.map(InstructionTester::build)
-				.mapToInt(it -> (int) StreamEx.of(InstructionSet.values())
+				.mapToInt(it -> (int) StreamEx.of(InstructionLambda.values())
 						.filter(it::matchInstruction)
 						.count())
 				.filter(i -> i >= 3)

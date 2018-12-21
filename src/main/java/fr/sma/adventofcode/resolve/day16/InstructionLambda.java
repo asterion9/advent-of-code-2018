@@ -1,6 +1,6 @@
 package fr.sma.adventofcode.resolve.day16;
 
-public enum InstructionSet implements Instruction {
+public enum InstructionLambda implements Instruction {
 	
 	ADDR((r, a, b, c) -> r[c] = r[a] + r[b]),
 	ADDI((r, a, b, c) -> r[c] = r[a] + b),
@@ -19,7 +19,7 @@ public enum InstructionSet implements Instruction {
 	EQRI((r, a, b, c) -> r[c] = r[a] == b ? 1 : 0),
 	EQRR((r, a, b, c) -> r[c] = r[a] == r[b] ? 1 : 0);
 	
-	InstructionSet(Instruction instruction) {
+	InstructionLambda(Instruction instruction) {
 		this.instruction = instruction;
 	}
 	

@@ -7,13 +7,13 @@ import java.util.EnumSet;
 public class Processor {
 	private final int[] register;
 	
-	private final ArrayList<InstructionSet> opCode;
+	private final ArrayList<InstructionLambda> opCode;
 	
 	public Processor() {
-		this(new int[4], new ArrayList<>(EnumSet.allOf(InstructionSet.class)));
+		this(new int[4], new ArrayList<>(EnumSet.allOf(InstructionLambda.class)));
 	}
 	
-	public Processor(int[] register, ArrayList<InstructionSet> opCode) {
+	public Processor(int[] register, ArrayList<InstructionLambda> opCode) {
 		this.opCode = opCode;
 		this.register = register;
 	}

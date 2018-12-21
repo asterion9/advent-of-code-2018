@@ -38,9 +38,9 @@ public class Day16Ex2 implements ExSolution {
 		Matcher instructionMatcher = INSTRUCTION_TEST_PATTERN.matcher(values);
 		
 		//init correspondance map between code and instruction
-		Map<Integer, EnumSet<InstructionSet>> correspondances =
+		Map<Integer, EnumSet<InstructionLambda>> correspondances =
 				IntStreamEx.range(0, 16)
-				.mapToEntry(i -> i, i -> EnumSet.allOf(InstructionSet.class))
+				.mapToEntry(i -> i, i -> EnumSet.allOf(InstructionLambda.class))
 				.toMap();
 		
 		//for each test line, remove the wrong correspondances
@@ -66,7 +66,7 @@ public class Day16Ex2 implements ExSolution {
 		} while (nbInstructionRemoved > 0);// repeat until there are no correspondance to remove
 		
 		// build the instruction array mapping code
-		ArrayList<InstructionSet> opCodes = EntryStream.of(correspondances).mapValues(set -> set.iterator().next()).sortedBy(Map.Entry::getKey).values().collect(Collectors.toCollection(ArrayList::new));
+		ArrayList<InstructionLambda> opCodes = EntryStream.of(correspondances).mapValues(set -> set.iterator().next()).sortedBy(Map.Entry::getKey).values().collect(Collectors.toCollection(ArrayList::new));
 		
 		Processor p = new Processor(new int[4], opCodes);
 		
