@@ -14,7 +14,7 @@ public interface Cpu {
 		return 0;
 	}
 	
-	default int calculate(int a, int b, int ca, int d, int e, int f) {
+	default int calculate(int a, int b, int c, int d, int e, int f) {
 		return 0;
 	}
 	

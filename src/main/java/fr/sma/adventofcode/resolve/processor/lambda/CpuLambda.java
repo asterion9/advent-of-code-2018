@@ -25,12 +25,22 @@ public class CpuLambda implements Cpu {
 	}
 	
 	@Override
+	public int calculate(int a, int b, int c, int d, int e, int f) {
+		return calculate(new int[] {a, b, c, d, e, f});
+	}
+	
+	@Override
 	public int calculate(int[] register) {
 		int i = register[pointer];
+		int r = register[0];
 		while (i >= 0 && i < code.size()) {
 			code.get(i).execute(register);
 			register[pointer]++;
 			i = register[pointer];
+			if (r != register[0]) {
+				r = register[0];
+				System.out.println(r);
+			}
 		}
 		return register[0];
 	}

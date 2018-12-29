@@ -1,8 +1,7 @@
 package fr.sma.adventofcode.resolve.processor.asm;
 
 import fr.sma.adventofcode.resolve.processor.Cpu;
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
+import one.util.streamex.EntryStream;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -73,18 +72,16 @@ public class CpuAsmBuilder {
 		
 		InsnList insnCode = new InsnList();
 		
-		
 		Map<Integer, LabelNode> labelMap = new HashMap<>();
-		StreamEx.of(code)
-				.map(ints -> {
-					InsnList codeLine = InstructionSetAsm.values()[ints[0]].createCode(ints[1], ints[2], ints[3]);
-					codeLine.add(new IincInsnNode(pointerLoc+1, 1));
+		EntryStream.of(code)
+				.mapToValue((i, ints) -> {
+					InsnList codeLine = InstructionSetAsm.values()[ints[0]].createCode(i, pointerLoc, ints[1], ints[2], ints[3]);
 					if (ints[3] == pointerLoc) {
+						codeLine.add(new IincInsnNode(pointerLoc+1, 1));
 						codeLine.add(new JumpInsnNode(GOTO, switchLabel));
 					}
 					return codeLine;
-				}).zipWith(IntStreamEx.iterate(0, i-> i+1))
-				.forKeyValue((codeInsns, i) -> {
+				}).forKeyValue((i, codeInsns) -> {
 					LabelNode ln = new LabelNode();
 					labelMap.put(i, ln);
 					codeInsns.insert(ln);

@@ -28,148 +28,120 @@ import static org.objectweb.asm.Opcodes.ISTORE;
 
 public enum InstructionSetAsm {
 	
-	ADDR((a, b, c) -> {
+	ADDR((i, p, a, b, c) -> {
 		InsnList build = build(
-				new VarInsnNode(ILOAD, a + 1),
-				new VarInsnNode(ILOAD, b + 1),
+				load(i, p, a),
+				load(i, p, b),
 				new InsnNode(IADD),
 				new VarInsnNode(ISTORE, c + 1));
 		if(c == 0) {
-			build.add(println(c));
+			build.add(println(0));
 		}
 		return build;
 	}),
-	ADDI((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
+	ADDI((i, p, a, b, c) -> build(
+			load(i, p, a),
 			new IntInsnNode(BIPUSH, b),
 			new InsnNode(IADD),
-			new VarInsnNode(ISTORE, c+1))),
-	MULR((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
-			new VarInsnNode(ILOAD, b+1),
+			new VarInsnNode(ISTORE, c + 1))),
+	MULR((i, p, a, b, c) -> build(
+			load(i, p, a),
+			load(i, p, b),
 			new InsnNode(IMUL),
 			new VarInsnNode(ISTORE, c+1))),
-	MULI((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
+	MULI((i, p, a, b, c) -> build(
+			load(i, p, a),
 			new IntInsnNode(BIPUSH, b),
 			new InsnNode(IMUL),
 			new VarInsnNode(ISTORE, c+1))),
-	BANR((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
-			new IntInsnNode(ILOAD, b+1),
+	BANR((i, p, a, b, c) -> build(
+			load(i, p, a),
+			load(i, p, b),
 			new InsnNode(IAND),
 			new VarInsnNode(ISTORE, c+1))),
-	BANI((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
+	BANI((i, p, a, b, c) -> build(
+			load(i, p, a),
 			new IntInsnNode(BIPUSH, b),
 			new InsnNode(IAND),
 			new VarInsnNode(ISTORE, c+1))),
-	BORR((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
-			new IntInsnNode(ILOAD, b+1),
+	BORR((i, p, a, b, c) -> build(
+			load(i, p, a),
+			load(i, p, b),
 			new InsnNode(IOR),
 			new VarInsnNode(ISTORE, c+1))),
-	BORI((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
+	BORI((i, p, a, b, c) -> build(
+			load(i, p, a),
 			new IntInsnNode(BIPUSH, b),
 			new InsnNode(IOR),
 			new VarInsnNode(ISTORE, c+1))),
-	SETR((a, b, c) -> build(
-			new VarInsnNode(ILOAD, a+1),
+	SETR((i, p, a, b, c) -> build(
+			load(i, p, a),
 			new VarInsnNode(ISTORE, c+1))),
-	SETI((a, b, c) -> build(
+	SETI((i, p, a, b, c) -> build(
 			new IntInsnNode(BIPUSH, a),
 			new VarInsnNode(ISTORE, c+1))),
-	GTIR((a, b, c) -> {
-		LabelNode skip = new LabelNode();
-		LabelNode end = new LabelNode();
-		return build(
+	GTIR((i, p, a, b, c) -> {
+		InsnList build = build(
 				new IntInsnNode(BIPUSH, a),
-				new IntInsnNode(ILOAD, b+1),
-				new JumpInsnNode(IF_ICMPGT, skip),
-				new InsnNode(ICONST_0),
-				new JumpInsnNode(GOTO, end),
-				skip,
-				new InsnNode(ICONST_1),
-				end,
-				new VarInsnNode(ISTORE, c+1)
+				load(i, p, b)
 		);
+		build.add(buildIfElse(c, IF_ICMPGT));
+		return build;
 	}),
-	GTRI((a, b, c) -> {
-		LabelNode skip = new LabelNode();
-		LabelNode end = new LabelNode();
-		return build(
-				new IntInsnNode(ILOAD, a+1),
-				new IntInsnNode(BIPUSH, b),
-				new JumpInsnNode(IF_ICMPGT, skip),
-				new InsnNode(ICONST_0),
-				new JumpInsnNode(GOTO, end),
-				skip,
-				new InsnNode(ICONST_1),
-				end,
-				new VarInsnNode(ISTORE, c+1)
+	GTRI((i, p, a, b, c) -> {
+		InsnList build = build(
+				load(i, p, a),
+				new IntInsnNode(BIPUSH, b)
 		);
+		build.add(buildIfElse(c, IF_ICMPGT));
+		return build;
 	}),
-	GTRR((a, b, c) -> {
-		LabelNode skip = new LabelNode();
-		LabelNode end = new LabelNode();
-		return build(
-				new IntInsnNode(ILOAD, a+1),
-				new IntInsnNode(ILOAD, b+1),
-				new JumpInsnNode(IF_ICMPGT, skip),
-				new InsnNode(ICONST_0),
-				new JumpInsnNode(GOTO, end),
-				skip,
-				new InsnNode(ICONST_1),
-				end,
-				new VarInsnNode(ISTORE, c+1)
+	GTRR((i, p, a, b, c) -> {
+		InsnList build = build(
+				load(i, p, a),
+				load(i, p, b)
 		);
+		build.add(buildIfElse(c, IF_ICMPGT));
+		return build;
 	}),
-	EQIR((a, b, c) -> {
-		LabelNode skip = new LabelNode();
-		LabelNode end = new LabelNode();
-		return build(
+	EQIR((i, p, a, b, c) -> {
+		InsnList build = build(
 				new IntInsnNode(BIPUSH, a),
-				new IntInsnNode(ILOAD, b+1),
-				new JumpInsnNode(IF_ICMPEQ, skip),
-				new InsnNode(ICONST_0),
-				new JumpInsnNode(GOTO, end),
-				skip,
-				new InsnNode(ICONST_1),
-				end,
-				new VarInsnNode(ISTORE, c+1)
+				new IntInsnNode(ILOAD, b+1)
 		);
+		build.add(buildIfElse(c, IF_ICMPEQ));
+		return build;
 	}),
-	EQRI((a, b, c) -> {
-		LabelNode skip = new LabelNode();
-		LabelNode end = new LabelNode();
-		return build(
-				new IntInsnNode(ILOAD, a+1),
-				new IntInsnNode(BIPUSH, b),
-				new JumpInsnNode(IF_ICMPEQ, skip),
-				new InsnNode(ICONST_0),
-				new JumpInsnNode(GOTO, end),
-				skip,
-				new InsnNode(ICONST_1),
-				end,
-				new VarInsnNode(ISTORE, c+1)
+	EQRI((i, p, a, b, c) -> {
+		InsnList build = build(
+				load(i, p, a),
+				new IntInsnNode(BIPUSH, b)
 		);
+		build.add(buildIfElse(c, IF_ICMPEQ));
+		return build;
 	}),
-	EQRR((a, b, c) -> {
-		LabelNode skip = new LabelNode();
-		LabelNode end = new LabelNode();
-		return build(
-				new IntInsnNode(ILOAD, a+1),
-				new IntInsnNode(ILOAD, b+1),
-				new JumpInsnNode(IF_ICMPEQ, skip),
-				new InsnNode(ICONST_0),
-				new JumpInsnNode(GOTO, end),
-				skip,
-				new InsnNode(ICONST_1),
-				end,
-				new VarInsnNode(ISTORE, c+1)
+	EQRR((i, p, a, b, c) -> {
+		InsnList build = build(
+				load(i, p, a),
+				load(i, p, b)
 		);
+		build.add(buildIfElse(c, IF_ICMPEQ));
+		return build;
 	});
+	
+	private static InsnList buildIfElse(int c, int insn) {
+		LabelNode skip = new LabelNode();
+		LabelNode end = new LabelNode();
+		InsnList insns = new InsnList();
+		insns.add(new JumpInsnNode(insn, skip));
+		insns.add(new InsnNode(ICONST_0));
+		insns.add(new JumpInsnNode(GOTO, end));
+		insns.add(skip);
+		insns.add(new InsnNode(ICONST_1));
+		insns.add(end);
+		insns.add(new VarInsnNode(ISTORE, c + 1));
+		return insns;
+	}
 	
 	private InstructionAsmProvider instructionAsmProvider;
 	
@@ -177,8 +149,16 @@ public enum InstructionSetAsm {
 		this.instructionAsmProvider = instructionAsmProvider;
 	}
 	
-	public InsnList createCode(int a, int b, int c) {
-		return instructionAsmProvider.build(a, b, c);
+	public InsnList createCode(int i, int p, int a, int b, int c) {
+		return instructionAsmProvider.build(i, p, a, b, c);
+	}
+	
+	private static AbstractInsnNode load(int i, int p, int a) {
+		if(a == p) {
+			return new IntInsnNode(BIPUSH, i);
+		} else {
+			return new IntInsnNode(ILOAD, a+1);
+		}
 	}
 	
 	private static InsnList build(AbstractInsnNode... nodes) {
@@ -194,4 +174,5 @@ public enum InstructionSetAsm {
 		insnList.add(new MethodInsnNode(INVOKEVIRTUAL, "java/io/PrintStream","println","(I)V", false));
 		return insnList;
 	}
+	
 }
