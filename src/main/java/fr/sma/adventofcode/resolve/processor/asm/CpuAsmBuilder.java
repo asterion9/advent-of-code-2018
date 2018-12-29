@@ -1,12 +1,12 @@
 package fr.sma.adventofcode.resolve.processor.asm;
 
 import fr.sma.adventofcode.resolve.processor.Cpu;
-import one.util.streamex.EntryStream;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
@@ -28,7 +28,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -74,17 +73,17 @@ public class CpuAsmBuilder {
 		
 		InsnList insnCode = new InsnList();
 		
-		List<LabelNode> labelNodes = StreamEx.generate(LabelNode::new).limit(code.size()).collect(Collectors.toList());
 		
-		EntryStream.of(code)
-				.mapToValue((i, ints) -> {
+		Map<Integer, LabelNode> labelMap = new HashMap<>();
+		StreamEx.of(code)
+				.map(ints -> {
 					InsnList codeLine = InstructionSetAsm.values()[ints[0]].createCode(ints[1], ints[2], ints[3]);
-					//codeLine.add(new IincInsnNode(pointerLoc+1, 1));
+					codeLine.add(new IincInsnNode(pointerLoc+1, 1));
 					if (ints[3] == pointerLoc) {
 						codeLine.add(new JumpInsnNode(GOTO, switchLabel));
 					}
 					return codeLine;
-				});
+				}).zipWith(IntStreamEx.iterate(0, i-> i+1))
 				.forKeyValue((codeInsns, i) -> {
 					LabelNode ln = new LabelNode();
 					labelMap.put(i, ln);
