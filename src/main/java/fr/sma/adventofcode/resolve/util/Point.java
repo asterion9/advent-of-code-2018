@@ -1,10 +1,11 @@
 package fr.sma.adventofcode.resolve.util;
 
+import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
+
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
 
 public class Point implements Comparable<Point> {
 	public static final Comparator<Point> comparator = Comparator.comparing(Point::getY).thenComparing(Point::getX);
@@ -15,6 +16,11 @@ public class Point implements Comparable<Point> {
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public Point(Point p1, Point p2) {
+		this.x = p1.x + p2.x;
+		this.y = p1.y + p2.y;
 	}
 	
 	public StreamEx<Point> square(int radius) {

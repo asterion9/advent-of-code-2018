@@ -1,6 +1,7 @@
 package fr.sma.adventofcode.resolve.day16;
 
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.processor.BaseOperation;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.EnumSet;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +34,7 @@ public class Day16Ex1 implements ExSolution {
 		long nbOpeMatchThreeOrMore = StreamEx.of(instructionMatcher.results())
 				.map(MatchResult::group)
 				.map(InstructionTester::build)
-				.mapToInt(it -> (int) StreamEx.of(InstructionLambda.values())
+				.mapToInt(it -> (int) StreamEx.of(EnumSet.allOf(BaseOperation.class))
 						.filter(it::matchInstruction)
 						.count())
 				.filter(i -> i >= 3)

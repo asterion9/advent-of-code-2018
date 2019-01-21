@@ -1,20 +1,24 @@
 package fr.sma.adventofcode.resolve.day16;
 
+import fr.sma.adventofcode.resolve.processor.BaseOperation;
+import fr.sma.adventofcode.resolve.processor.InstructionLine;
+import fr.sma.adventofcode.resolve.processor.lambda.LambdaInstructionBuilder;
+import one.util.streamex.StreamEx;
+
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import one.util.streamex.StreamEx;
 
 public class InstructionTester {
 	public static final Pattern OPERATION_PATTERN = Pattern.compile("(\\d+,? \\d+,? \\d+,? \\d+)");
 
 	private int[] beforeReg;
-	private int[] instrutction;
+	private int[] instruction;
 	private int[] afterReg;
 	
 	public InstructionTester(int[] beforeReg, int[] instruction, int[] afterReg) {
 		this.beforeReg = beforeReg;
-		this.instrutction = instruction;
+		this.instruction = instruction;
 		this.afterReg = afterReg;
 	}
 	
@@ -36,9 +40,9 @@ public class InstructionTester {
 		return new InstructionTester(before, instruction, after);
 	}
 	
-	public boolean matchInstruction(Instruction i) {
+	public boolean matchInstruction(BaseOperation operation) {
 		int[] before = Arrays.copyOf(beforeReg, 4);
-		i.execute(before, instrutction[1], instrutction[2], instrutction[3]);
+		LambdaInstructionBuilder.build(new InstructionLine(operation, Arrays.copyOfRange(instruction, 1, instruction.length),0)).execute(before);
 		return Arrays.equals(before, afterReg);
 	}
 	
@@ -46,11 +50,11 @@ public class InstructionTester {
 		return beforeReg;
 	}
 	
-	public int[] getInstrutction() {
-		return instrutction;
-	}
-	
 	public int[] getAfterReg() {
 		return afterReg;
+	}
+	
+	public int[] getInstruction() {
+		return instruction;
 	}
 }

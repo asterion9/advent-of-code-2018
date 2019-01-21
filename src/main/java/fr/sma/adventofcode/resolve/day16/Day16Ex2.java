@@ -1,6 +1,10 @@
 package fr.sma.adventofcode.resolve.day16;
 
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.processor.Cpu;
+import fr.sma.adventofcode.resolve.processor.InstructionLine;
+import fr.sma.adventofcode.resolve.processor.BaseOperation;
+import fr.sma.adventofcode.resolve.processor.lambda.CpuLambda;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
 import one.util.streamex.EntryStream;
 import one.util.streamex.IntStreamEx;
@@ -38,22 +42,22 @@ public class Day16Ex2 implements ExSolution {
 		Matcher instructionMatcher = INSTRUCTION_TEST_PATTERN.matcher(values);
 		
 		//init correspondance map between code and instruction
-		Map<Integer, EnumSet<InstructionLambda>> correspondances =
+		Map<Integer, EnumSet<BaseOperation>> correspondances =
 				IntStreamEx.range(0, 16)
-				.mapToEntry(i -> i, i -> EnumSet.allOf(InstructionLambda.class))
+				.mapToEntry(i -> i, i -> EnumSet.allOf(BaseOperation.class))
 				.toMap();
 		
 		//for each test line, remove the wrong correspondances
 		StreamEx.of(instructionMatcher.results())
 				.map(MatchResult::group)
 				.map(InstructionTester::build)
-				.mapToEntry(it -> correspondances.get(it.getInstrutction()[0]))
+				.mapToEntry(it -> correspondances.get(it.getInstruction()[0]))
 				.forKeyValue((it, is) -> is.removeIf(i -> !it.matchInstruction(i)));
 		
 		long nbInstructionRemoved = 0;
 		do {
 			// find known code
-			List<Instruction> identifiedInstructions = StreamEx.of(correspondances.values())
+			List<BaseOperation> identifiedInstructions = StreamEx.of(correspondances.values())
 					.filter(is -> is.size() <= 1)
 					.map(is -> is.iterator().next())
 					.collect(Collectors.toList());
@@ -66,19 +70,21 @@ public class Day16Ex2 implements ExSolution {
 		} while (nbInstructionRemoved > 0);// repeat until there are no correspondance to remove
 		
 		// build the instruction array mapping code
-		ArrayList<InstructionLambda> opCodes = EntryStream.of(correspondances).mapValues(set -> set.iterator().next()).sortedBy(Map.Entry::getKey).values().collect(Collectors.toCollection(ArrayList::new));
+		ArrayList<BaseOperation> opCodes = EntryStream.of(correspondances)
+				.mapValues(set -> set.iterator().next())
+				.sortedBy(Map.Entry::getKey)
+				.values()
+				.collect(Collectors.toCollection(ArrayList::new));
 		
-		Processor p = new Processor(new int[4], opCodes);
+		Pattern opcode = Pattern.compile("\\d+");
+		String instructionCode = StreamEx.split(values.split("\n\n\n\n")[1], "\n")
+				.map(line -> opcode.matcher(line).replaceFirst(matchResult -> opCodes.get(Integer.parseInt(matchResult.group())).name()))
+				.joining("\n");
+		List<InstructionLine> instructionLines = Cpu.readCode(instructionCode);
 		
-		//for each line of instruction, apply it to the register
-		StreamEx.of(values.split("\n\n\n\n")[1].split("\n"))
-				.map(InstructionTester.OPERATION_PATTERN::matcher)
-				.flatMap(Matcher::results)
-				.map(MatchResult::group)
-				.map(line -> StreamEx.split(line, " ").mapToInt(Integer::valueOf).toArray())
-				.forEach(p::apply);
+		CpuLambda cpuLambda = new CpuLambda(4, instructionLines);
 		
-		System.out.println(p.getRegister()[0]);
+		System.out.println(cpuLambda.calculate(new int[5]));
 	}
 	
 }
