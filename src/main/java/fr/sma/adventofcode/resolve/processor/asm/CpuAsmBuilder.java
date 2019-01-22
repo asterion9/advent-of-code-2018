@@ -7,7 +7,6 @@ import one.util.streamex.StreamEx;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -30,6 +29,8 @@ import java.util.List;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.GOTO;
+import static org.objectweb.asm.Opcodes.IADD;
+import static org.objectweb.asm.Opcodes.ICONST_1;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.RETURN;
@@ -105,7 +106,12 @@ public class CpuAsmBuilder {
 						codeLine.add(AsmInstructionBuilder.println(0));
 					}
 					if (iline.getWriteIndexes().contains(pointerLoc)) {
-						codeLine.add(new IincInsnNode(pointerLoc+1, 1));
+						codeLine.add(AsmInstructionBuilder.build(
+								AsmInstructionBuilder.load(-1, -1, pointerLoc)
+										.append(new InsnNode(ICONST_1))
+										.append(new InsnNode(IADD))
+										.append(AsmInstructionBuilder.store(pointerLoc))
+						));
 						codeLine.add(new JumpInsnNode(GOTO, switchLabel));
 					}
 					return codeLine;
@@ -141,7 +147,12 @@ public class CpuAsmBuilder {
 				.mapToEntry(InstructionLine::getPosition, iline -> {
 					InsnList codeLine = AsmInstructionBuilder.compileInstruction(pointerLoc, iline);
 					if (iline.getWriteIndexes().contains(pointerLoc)) {
-						codeLine.add(new IincInsnNode(pointerLoc+1, 1));
+						codeLine.add(AsmInstructionBuilder.build(
+								AsmInstructionBuilder.load(-1, -1, pointerLoc)
+								.append(new InsnNode(ICONST_1))
+								.append(new InsnNode(IADD))
+								.append(AsmInstructionBuilder.store(pointerLoc))
+						));
 						codeLine.add(new JumpInsnNode(GOTO, switchLabel));
 					}
 					return codeLine;

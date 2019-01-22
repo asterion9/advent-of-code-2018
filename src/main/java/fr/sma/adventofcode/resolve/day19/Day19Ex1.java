@@ -2,6 +2,7 @@ package fr.sma.adventofcode.resolve.day19;
 
 import fr.sma.adventofcode.resolve.ExSolution;
 import fr.sma.adventofcode.resolve.processor.Cpu;
+import fr.sma.adventofcode.resolve.processor.asm.CpuAsmBuilder;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,9 @@ public class Day19Ex1 implements ExSolution {
 		
 		String values = dataFetcher.fetch(19).trim();
 		
-		//Cpu cpu = CpuAsmBuilder.buildDynamic /*new CpuLambda*//*new PeepHoleCpuLambda*/(Cpu.readPointer(values), Cpu.readCode(values), true);
+		Cpu cpu = CpuAsmBuilder.buildDynamic /*new CpuLambda*//*new PeepHoleCpuLambda*/(Cpu.readPointer(values), Cpu.readCode(values), true);
 		
-		Cpu cpu = new Day19CompiledAsmCpu();
+		//Cpu cpu = new Day19CompiledAsmCpu();
 		
 		int result = cpu.calculate(0, 0, 0, 0, 0, 0);
 		

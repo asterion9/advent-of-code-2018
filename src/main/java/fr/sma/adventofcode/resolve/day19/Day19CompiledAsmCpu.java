@@ -12,17 +12,13 @@ public class Day19CompiledAsmCpu implements Cpu {
 	}
 	
 	public int calculate(int var1, int var2, int var3, int var4, int var5, int var6) {
-		while (true) {
-			label604:
-			{
-				label605:
-				{
-					label606:
-					{
-						label525:
-						{
+		while(true) {
+			label604: {
+				label605: {
+					label606: {
+						label525: {
 							boolean var8;
-							switch (var2) {
+							switch(var2) {
 								case 0:
 								case 17:
 									var4 += 2;
@@ -249,7 +245,7 @@ public class Day19CompiledAsmCpu implements Cpu {
 									var3 = 1;
 							}
 							
-							while (true) {
+							while(true) {
 								var6 = var5 * var3;
 								var8 = var6 == var4;
 								if (var8) {
@@ -284,7 +280,6 @@ public class Day19CompiledAsmCpu implements Cpu {
 			}
 			
 			var2 = 25 + var1;
-			++var2;
 		}
 	}
 }
