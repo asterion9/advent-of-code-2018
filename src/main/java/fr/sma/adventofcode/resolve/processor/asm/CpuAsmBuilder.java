@@ -10,7 +10,6 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
@@ -31,7 +30,6 @@ import java.util.List;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.GOTO;
-import static org.objectweb.asm.Opcodes.ILOAD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.RETURN;
@@ -72,7 +70,6 @@ public class CpuAsmBuilder {
 			compileCodeWithSwitch(pointerLoc, code, calculator);
 		}
 		
-		
 		calcImpl.methods.add(constructor);
 		calcImpl.methods.add(calculator);
 		
@@ -100,9 +97,9 @@ public class CpuAsmBuilder {
 					if(AsmGotoInstructionBuilder.doesApplyTo(pointerLoc, iline)) {
 						return AsmGotoInstructionBuilder.compileInstruction(pointerLoc, iline, labelProvider);
 					}
-					/*if(i > 0 && i < code.size() -1 && AsmIfInstructionBuilder.doesApplyTo(pointerLoc, code.get(i-1), iline)) {
+					if(i > 0 && i < code.size() -1 && AsmIfInstructionBuilder.doesApplyTo(pointerLoc, code.get(i-1), iline)) {
 						return AsmIfInstructionBuilder.compileInstruction(pointerLoc, code.get(i-1), iline, labelProvider);
-					}*/
+					}
 					InsnList codeLine = AsmInstructionBuilder.compileInstruction(pointerLoc, iline);
 					if(iline.getWriteIndexes().contains(0)) {
 						codeLine.add(AsmInstructionBuilder.println(0));
@@ -125,11 +122,11 @@ public class CpuAsmBuilder {
 		
 		
 		calculator.instructions.add(switchLabel);
-		calculator.instructions.add(new IntInsnNode(ILOAD, pointerLoc+1));
+		calculator.instructions.add(AsmInstructionBuilder.build(AsmInstructionBuilder.load(-1, -1, pointerLoc)));
 		calculator.instructions.add(switchNode);
 		calculator.instructions.add(insnCode);
 		calculator.instructions.add(end);
-		calculator.instructions.add(new IntInsnNode(ILOAD, 1));
+		calculator.instructions.add(AsmInstructionBuilder.build(AsmInstructionBuilder.load(-1, -1, 0)));
 		calculator.instructions.add(new InsnNode(IRETURN));
 	}
 	
@@ -161,11 +158,11 @@ public class CpuAsmBuilder {
 		
 		
 		calculator.instructions.add(switchLabel);
-		calculator.instructions.add(new IntInsnNode(ILOAD, pointerLoc+1));
+		calculator.instructions.add(AsmInstructionBuilder.build(AsmInstructionBuilder.load(-1, -1, pointerLoc)));
 		calculator.instructions.add(switchNode);
 		calculator.instructions.add(insnCode);
 		calculator.instructions.add(end);
-		calculator.instructions.add(new IntInsnNode(ILOAD, 1));
+		calculator.instructions.add(AsmInstructionBuilder.build(AsmInstructionBuilder.load(-1, -1, 0)));
 		calculator.instructions.add(new InsnNode(IRETURN));
 	}
 }

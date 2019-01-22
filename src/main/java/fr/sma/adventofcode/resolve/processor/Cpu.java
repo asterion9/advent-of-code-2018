@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public interface Cpu {
 	default int calculate(int... register) {
-		return 0;
+		throw new IllegalStateException("you must implement this method");
 	}
 	
 	default int calculate(int a, int b, int c, int d, int e, int f) {

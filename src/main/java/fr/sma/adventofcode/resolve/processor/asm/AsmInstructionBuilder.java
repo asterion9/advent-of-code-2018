@@ -50,101 +50,22 @@ public class AsmInstructionBuilder {
 	
 	public static Map<BaseOperation, AsmInstructionProvider> instructionBuilders =
 			StreamEx.of(
-					Map.<BaseOperation, AsmInstructionProvider>entry(ADDR, (i, p, ints) ->
-							build(
-									load(i, p, ints[0]),
-									load(i, p, ints[1]),
-									new InsnNode(IADD),
-									new VarInsnNode(ISTORE, ints[2] + 1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(ADDI, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									new IntInsnNode(BIPUSH, ints[1]),
-									new InsnNode(IADD),
-									new VarInsnNode(ISTORE, ints[2] + 1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(MULR,(i, p, ints) ->
-							build(load(i, p, ints[0]),
-									load(i, p, ints[1]),
-									new InsnNode(IMUL),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(MULI, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									new IntInsnNode(BIPUSH, ints[1]),
-									new InsnNode(IMUL),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(BANR, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									load(i, p, ints[1]),
-									new InsnNode(IAND),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(BANI, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									new IntInsnNode(BIPUSH, ints[1]),
-									new InsnNode(IAND),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(BORR, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									load(i, p, ints[1]),
-									new InsnNode(IOR),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(BORI, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									new IntInsnNode(BIPUSH, ints[1]),
-									new InsnNode(IOR),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(SETR, (i, p, ints) ->
-							build(load(i, p, ints[0]),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(SETI, (i, p, ints) ->
-							build(new IntInsnNode(BIPUSH, ints[0]),
-									new VarInsnNode(ISTORE, ints[2]+1))),
-					Map.<BaseOperation, AsmInstructionProvider>entry(GTIR, (i, p, ints) -> {
-						InsnList build = build(
-								new IntInsnNode(BIPUSH, ints[0]),
-								load(i, p, ints[1])
-						);
-						build.add(buildIfElse(ints[2], IF_ICMPGT));
-						return build;
-					}),
-					Map.<BaseOperation, AsmInstructionProvider>entry(GTRI, (i, p, ints) -> {
-						InsnList build = build(
-								load(i, p, ints[0]),
-								new IntInsnNode(BIPUSH, ints[1])
-						);
-						build.add(buildIfElse(ints[2], IF_ICMPGT));
-						return build;
-					}),
-					Map.<BaseOperation, AsmInstructionProvider>entry(GTRR, (i, p, ints) -> {
-						InsnList build = build(
-								load(i, p, ints[0]),
-								load(i, p, ints[1])
-						);
-						build.add(buildIfElse(ints[2], IF_ICMPGT));
-						return build;
-					}),
-					Map.<BaseOperation, AsmInstructionProvider>entry(EQIR, (i, p, ints) -> {
-						InsnList build = build(
-								new IntInsnNode(BIPUSH, ints[0]),
-								new IntInsnNode(ILOAD, ints[1] + 1)
-						);
-						build.add(buildIfElse(ints[2], IF_ICMPEQ));
-						return build;
-					}),
-					Map.<BaseOperation, AsmInstructionProvider>entry(EQRI, (i, p, ints) ->	{
-						InsnList build = build(
-								load(i, p, ints[0]),
-								new IntInsnNode(BIPUSH, ints[1])
-						);
-						build.add(buildIfElse(ints[2], IF_ICMPEQ));
-						return build;
-					}),
-					Map.<BaseOperation, AsmInstructionProvider>entry(EQRR, (i, p, ints) -> {
-						InsnList build = build(
-								load(i, p, ints[0]),
-								load(i, p, ints[1])
-						);
-						build.add(buildIfElse(ints[2], IF_ICMPEQ));
-						return build;
-					})
+					Map.<BaseOperation, AsmInstructionProvider>entry(ADDR, (i, p, ints) -> build(load(i, p, ints[0]).append(load(i, p, ints[1])).append(new InsnNode(IADD)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(ADDI, (i, p, ints) -> build(load(i, p, ints[0]).append(new IntInsnNode(BIPUSH, ints[1])).append(new InsnNode(IADD)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(MULR,(i, p, ints) -> build(load(i, p, ints[0]).append(load(i, p, ints[1])).append(new InsnNode(IMUL)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(MULI, (i, p, ints) -> build(load(i, p, ints[0]).append(new IntInsnNode(BIPUSH, ints[1])).append(new InsnNode(IMUL)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(BANR, (i, p, ints) -> build(load(i, p, ints[0]).append(load(i, p, ints[1])).append(new InsnNode(IAND)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(BANI, (i, p, ints) -> build(load(i, p, ints[0]).append(new IntInsnNode(BIPUSH, ints[1])).append(new InsnNode(IAND)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(BORR, (i, p, ints) -> build(load(i, p, ints[0]).append(load(i, p, ints[1])).append(new InsnNode(IOR)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(BORI, (i, p, ints) -> build(load(i, p, ints[0]).append(new IntInsnNode(BIPUSH, ints[1])).append(new InsnNode(IOR)).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(SETR, (i, p, ints) -> build(load(i, p, ints[0]).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(SETI, (i, p, ints) -> build(StreamEx.<AbstractInsnNode>of(new IntInsnNode(BIPUSH, ints[0])).append(store(ints[2])))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(GTIR, (i, p, ints) -> build(StreamEx.<AbstractInsnNode>of(new IntInsnNode(BIPUSH, ints[0])).append(load(i, p, ints[1])).append(buildIfElse(ints[2], IF_ICMPGT)))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(GTRI, (i, p, ints) -> build(load(i, p, ints[0]).append(new IntInsnNode(BIPUSH, ints[1])).append(buildIfElse(ints[2], IF_ICMPGT)))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(GTRR, (i, p, ints) -> build(load(i, p, ints[0]).append(load(i, p, ints[1])).append(buildIfElse(ints[2], IF_ICMPGT)))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(EQIR, (i, p, ints) -> build(StreamEx.<AbstractInsnNode>of(new IntInsnNode(BIPUSH, ints[0]), new IntInsnNode(ILOAD, ints[1] + 1)).append(buildIfElse(ints[2], IF_ICMPEQ)))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(EQRI, (i, p, ints) -> build(load(i, p, ints[0]).append(new IntInsnNode(BIPUSH, ints[1])).append(buildIfElse(ints[2], IF_ICMPEQ)))),
+					Map.<BaseOperation, AsmInstructionProvider>entry(EQRR, (i, p, ints) -> build(load(i, p, ints[0]).append(load(i, p, ints[1])).append(buildIfElse(ints[2], IF_ICMPEQ))))
 			).mapToEntry(Map.Entry::getKey, Map.Entry::getValue).toMap();
 	
 	
@@ -152,31 +73,34 @@ public class AsmInstructionBuilder {
 		return instructionBuilders.get(iline.getOperation()).build(iline.getPosition(), pointerLoc, iline.getInputs());
 	}
 	
-	private static InsnList buildIfElse(int c, int ifOpCode) {
+	private static StreamEx<AbstractInsnNode> buildIfElse(int c, int ifOpCode) {
 		LabelNode skip = new LabelNode();
 		LabelNode end = new LabelNode();
-		InsnList insns = new InsnList();
-		insns.add(new JumpInsnNode(ifOpCode, skip));
-		insns.add(new InsnNode(ICONST_0));
-		insns.add(new JumpInsnNode(GOTO, end));
-		insns.add(skip);
-		insns.add(new InsnNode(ICONST_1));
-		insns.add(end);
-		insns.add(new VarInsnNode(ISTORE, c + 1));
-		return insns;
+		return StreamEx.of(
+				new JumpInsnNode(ifOpCode, skip),
+				new InsnNode(ICONST_0),
+				new JumpInsnNode(GOTO, end),
+				skip,
+				new InsnNode(ICONST_1),
+				end
+		).append(store(c));
 	}
 	
-	private static AbstractInsnNode load(int i, int p, int a) {
+	public static StreamEx<AbstractInsnNode> load(int i, int p, int a) {
 		if (a == p) {
-			return new IntInsnNode(BIPUSH, i);
+			return StreamEx.of(new IntInsnNode(BIPUSH, i));
 		} else {
-			return new IntInsnNode(ILOAD, a + 1);
+			return StreamEx.of(new IntInsnNode(ILOAD, a + 1));
 		}
 	}
 	
-	private static InsnList build(AbstractInsnNode... nodes) {
+	public static StreamEx<AbstractInsnNode> store(int a) {
+		return StreamEx.of(new VarInsnNode(ISTORE, a + 1));
+	}
+	
+	public static InsnList build(StreamEx<AbstractInsnNode> nodes) {
 		InsnList list = new InsnList();
-		StreamEx.of(nodes).forEach(list::add);
+		nodes.forEach(list::add);
 		return list;
 	}
 	

@@ -24,7 +24,7 @@ public class Day21Ex1 implements ExSolution {
 		
 		Cpu cpu = /*CpuAsmBuilder.buildDynamic */new CpuLambda/*new PeepHoleCpuLambda*/(Cpu.readPointer(values), Cpu.readCode(values));
 		
-		//Cpu cpu = new CompiledAsmCpu();
+		//Cpu cpu = new Day21CompiledAsmCpu();
 		
 		for (int i = 0; i < 1000; i++) {
 			System.out.println(i + " => " + cpu.calculate(i, 0, 0, 0, 0, 0));
