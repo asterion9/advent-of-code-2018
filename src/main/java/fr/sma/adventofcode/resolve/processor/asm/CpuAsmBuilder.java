@@ -50,7 +50,7 @@ public class CpuAsmBuilder {
 		}
 	}
 	
-	public static Cpu buildDynamic(int pointerLoc, List<InstructionLine> code) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, IOException, URISyntaxException {
+	public static Cpu buildDynamic(int pointerLoc, List<InstructionLine> code, boolean optim) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, IOException, URISyntaxException {
 		ClassNode calcImpl = new ClassNode();
 		calcImpl.version = V11;
 		calcImpl.access = ACC_PUBLIC;
@@ -66,8 +66,12 @@ public class CpuAsmBuilder {
 		
 		MethodNode calculator = new MethodNode(ACC_PUBLIC,"calculate","(IIIIII)I",null,null);
 		
-		//compileCodeWithSwitch(pointerLoc, code, calculator);
-		compileCodeWithOptim(pointerLoc, code, calculator);
+		if(optim) {
+			compileCodeWithOptim(pointerLoc, code, calculator);
+		} else {
+			compileCodeWithSwitch(pointerLoc, code, calculator);
+		}
+		
 		
 		calcImpl.methods.add(constructor);
 		calcImpl.methods.add(calculator);
@@ -96,9 +100,9 @@ public class CpuAsmBuilder {
 					if(AsmGotoInstructionBuilder.doesApplyTo(pointerLoc, iline)) {
 						return AsmGotoInstructionBuilder.compileInstruction(pointerLoc, iline, labelProvider);
 					}
-					if(i > 0 && i < code.size() -1 && AsmIfInstructionBuilder.doesApplyTo(pointerLoc, code.get(i-1), iline)) {
+					/*if(i > 0 && i < code.size() -1 && AsmIfInstructionBuilder.doesApplyTo(pointerLoc, code.get(i-1), iline)) {
 						return AsmIfInstructionBuilder.compileInstruction(pointerLoc, code.get(i-1), iline, labelProvider);
-					}
+					}*/
 					InsnList codeLine = AsmInstructionBuilder.compileInstruction(pointerLoc, iline);
 					if(iline.getWriteIndexes().contains(0)) {
 						codeLine.add(AsmInstructionBuilder.println(0));
