@@ -63,7 +63,7 @@ public class CpuAsmBuilder {
 		constructor.instructions.add(new MethodInsnNode(INVOKESPECIAL,"java/lang/Object","<init>", "()V",false));
 		constructor.instructions.add(new InsnNode(RETURN));
 		
-		MethodNode calculator = new MethodNode(ACC_PUBLIC,"calculate","(IIIIII)I",null,null);
+		MethodNode calculator = new MethodNode(ACC_PUBLIC,"calculate","([I)I",null,null);
 		
 		if(optim) {
 			compileCodeWithOptim(pointerLoc, code, calculator);
