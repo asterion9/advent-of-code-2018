@@ -22,11 +22,11 @@ public class Day19Ex1 implements ExSolution {
 		
 		String values = dataFetcher.fetch(19).trim();
 		
-		Cpu cpu = CpuAsmBuilder.buildDynamic /*new CpuLambda*//*new PeepHoleCpuLambda*/(Cpu.readPointer(values), Cpu.readCode(values), true);
+		//Cpu cpu = new CpuLambda(Cpu.readPointer(values), Cpu.readCode(values));
+		Cpu cpu = CpuAsmBuilder.buildDynamic(Cpu.readPointer(values), Cpu.readCode(values), true);
+
 		
-		//Cpu cpu = new Day19CompiledAsmCpu();
-		
-		int result = cpu.calculate(0, 0, 0, 0, 0, 0);
+		long result = cpu.calculate(0, 0, 0, 0, 0, 0);
 		
 		System.out.println("result = " + result);
 	}

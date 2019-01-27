@@ -84,7 +84,7 @@ public class Day16Ex2 implements ExSolution {
 		
 		CpuLambda cpuLambda = new CpuLambda(4, instructionLines);
 		
-		System.out.println(cpuLambda.calculate(new int[5]));
+		System.out.println(cpuLambda.calculate(new long[5]));
 	}
 	
 }

@@ -4,12 +4,14 @@ import fr.sma.adventofcode.resolve.processor.BaseOperation;
 import fr.sma.adventofcode.resolve.processor.InstructionLine;
 import one.util.streamex.StreamEx;
 import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 
 import java.util.EnumSet;
 import java.util.Set;
 
 import static org.objectweb.asm.Opcodes.IFNE;
+import static org.objectweb.asm.Opcodes.L2I;
 
 public class AsmIfInstructionBuilder {
 	public static boolean doesApplyTo(int pointerLoc, InstructionLine previous, InstructionLine current) {
@@ -26,6 +28,7 @@ public class AsmIfInstructionBuilder {
 		int comparisonResultLoc = previous.getWriteIndexes().iterator().next();
 		return AsmInstructionBuilder.build(
 				StreamEx.of(AsmInstructionBuilder.load(-1, -1, comparisonResultLoc)
+						.append(new InsnNode(L2I))
 						.append(new JumpInsnNode(IFNE, labelProvider.getForPosition(current.getPosition()+2))))
 		);
 	}

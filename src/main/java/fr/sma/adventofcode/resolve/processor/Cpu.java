@@ -10,12 +10,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public interface Cpu {
-	default int calculate(int... register) {
-		throw new IllegalStateException("you must implement this method");
-	}
+	long calculate(long... register);
 	
-	default int calculate(int a, int b, int c, int d, int e, int f) {
-		return calculate(new int[]{a, b, c, d, e, f});
+	default long calculate(long a, long b, long c, long d, long e, long f) {
+		return calculate(new long[]{a, b, c, d, e, f});
 	}
 	
 	static int readPointer(String values) {

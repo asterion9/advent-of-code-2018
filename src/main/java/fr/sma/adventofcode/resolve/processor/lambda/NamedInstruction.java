@@ -23,7 +23,7 @@ public class NamedInstruction implements Instruction {
 	}
 	
 	@Override
-	public void execute(int[] register) {
+	public void execute(long[] register) {
 		instruction.execute(register);
 	}
 }

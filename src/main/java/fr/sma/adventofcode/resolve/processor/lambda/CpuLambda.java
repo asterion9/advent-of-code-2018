@@ -22,11 +22,11 @@ public class CpuLambda implements Cpu {
 	}
 	
 	@Override
-	public int calculate(int[] register) {
-		int i = register[pointer];
-		int r = register[0];
+	public long calculate(long[] register) {
+		long i = register[pointer];
+		long r = register[0];
 		while (i >= 0 && i < code.size()) {
-			code.get(i).execute(register);
+			code.get((int) i).execute(register);
 			i = register[pointer];
 			if (r != register[0]) {
 				r = register[0];

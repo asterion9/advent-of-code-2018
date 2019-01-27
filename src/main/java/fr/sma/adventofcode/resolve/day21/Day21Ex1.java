@@ -2,7 +2,6 @@ package fr.sma.adventofcode.resolve.day21;
 
 import fr.sma.adventofcode.resolve.ExSolution;
 import fr.sma.adventofcode.resolve.processor.Cpu;
-import fr.sma.adventofcode.resolve.processor.lambda.CpuLambda;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +21,9 @@ public class Day21Ex1 implements ExSolution {
 		
 		String values = dataFetcher.fetch(21).trim();
 		
-		Cpu cpu = /*CpuAsmBuilder.buildDynamic */new CpuLambda/*new PeepHoleCpuLambda*/(Cpu.readPointer(values), Cpu.readCode(values));
+		//Cpu cpu = CpuAsmBuilder.buildDynamic(Cpu.readPointer(values), Cpu.readCode(values), true);
 		
-		//Cpu cpu = new Day21CompiledAsmCpu();
+		Cpu cpu = new Day21CpuDecompiled();
 		
 		for (int i = 0; i < 1000; i++) {
 			System.out.println(i + " => " + cpu.calculate(i, 0, 0, 0, 0, 0));

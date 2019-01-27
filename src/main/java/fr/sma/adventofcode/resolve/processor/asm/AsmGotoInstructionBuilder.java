@@ -21,12 +21,15 @@ public class AsmGotoInstructionBuilder {
 	public static InsnList compileInstruction(int pointerLoc, InstructionLine iline, LabelProvider labelProvider) {
 		NamedInstruction buildedInstruction = LambdaInstructionBuilder.build(pointerLoc, iline);
 		int maxIndex = IntStreamEx.of(iline.getReadIndexes()).append(IntStreamEx.of(iline.getWriteIndexes())).append(pointerLoc).max().getAsInt();
-		int[] register = new int[maxIndex + 1];
+		long[] register = new long[maxIndex + 1];
 		register[pointerLoc] = iline.getPosition();
 		buildedInstruction.execute(register);
-		int gotoDestionation = register[pointerLoc];
+		long gotoDestination = register[pointerLoc];
 		InsnList insnList = new InsnList();
-		insnList.add(new JumpInsnNode(GOTO, labelProvider.getForPosition(gotoDestionation)));
+		if(gotoDestination > Integer.MAX_VALUE) {
+			gotoDestination = Integer.MAX_VALUE;
+		}
+		insnList.add(new JumpInsnNode(GOTO, labelProvider.getForPosition((int) gotoDestination)));
 		return insnList;
 	}
 }

@@ -6,7 +6,7 @@ import fr.sma.adventofcode.resolve.processor.Cpu;
 import fr.sma.adventofcode.resolve.processor.InstructionLine;
 import fr.sma.adventofcode.resolve.processor.lambda.CpuLambda;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
-import one.util.streamex.IntStreamEx;
+import one.util.streamex.LongStreamEx;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,13 +48,13 @@ public class Day19Ex2 implements ExSolution {
 				}).collect(Collectors.toList());
 		
 		Cpu cpu = new CpuLambda(pointerLoc, code);
-		int[] register = new int[] {1, 0, 0, 0, 0, 0};
-		int result = cpu.calculate(register);
-		int number = register[3];
+		long[] register = new long[] {1, 0, 0, 0, 0, 0};
+		long result = cpu.calculate(register);
+		long number = register[3];
 		
-		int sum = IntStreamEx.range(1, (int) Math.ceil(Math.pow(number, 0.5)))
+		long sum = LongStreamEx.range(1, (int) Math.ceil(Math.pow(number, 0.5)))
 				.filter(i -> number % i == 0)
-				.flatMap(i -> IntStreamEx.of(i, number / i))
+				.flatMap(i -> LongStreamEx.of(i, number / i))
 				.sum();
 		
 		System.out.println("sum = " + sum);

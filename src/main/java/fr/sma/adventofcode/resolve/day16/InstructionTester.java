@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
 public class InstructionTester {
 	public static final Pattern OPERATION_PATTERN = Pattern.compile("(\\d+,? \\d+,? \\d+,? \\d+)");
 
-	private int[] beforeReg;
+	private long[] beforeReg;
 	private int[] instruction;
-	private int[] afterReg;
+	private long[] afterReg;
 	
-	public InstructionTester(int[] beforeReg, int[] instruction, int[] afterReg) {
+	public InstructionTester(long[] beforeReg, int[] instruction, long[] afterReg) {
 		this.beforeReg = beforeReg;
 		this.instruction = instruction;
 		this.afterReg = afterReg;
@@ -25,32 +25,32 @@ public class InstructionTester {
 	public static InstructionTester build(String testString) {
 		Matcher matcher = OPERATION_PATTERN.matcher(testString);
 		matcher.find();
-		int[] before = StreamEx.split(matcher.group(), ", ")
-				.mapToInt(Integer::valueOf)
+		long[] before = StreamEx.split(matcher.group(), ", ")
+				.mapToLong(Long::valueOf)
 				.toArray();
 		matcher.find();
 		int[] instruction = StreamEx.split(matcher.group(), " ")
 				.mapToInt(Integer::valueOf)
 				.toArray();
 		matcher.find();
-		int[] after = StreamEx.split(matcher.group(), ", ")
-				.mapToInt(Integer::valueOf)
+		long[] after = StreamEx.split(matcher.group(), ", ")
+				.mapToLong(Long::valueOf)
 				.toArray();
 		
 		return new InstructionTester(before, instruction, after);
 	}
 	
 	public boolean matchInstruction(BaseOperation operation) {
-		int[] before = Arrays.copyOf(beforeReg, 4);
+		long[] before = Arrays.copyOf(beforeReg, 4);
 		LambdaInstructionBuilder.build(new InstructionLine(operation, Arrays.copyOfRange(instruction, 1, instruction.length),0)).execute(before);
 		return Arrays.equals(before, afterReg);
 	}
 	
-	public int[] getBeforeReg() {
+	public long[] getBeforeReg() {
 		return beforeReg;
 	}
 	
-	public int[] getAfterReg() {
+	public long[] getAfterReg() {
 		return afterReg;
 	}
 	
