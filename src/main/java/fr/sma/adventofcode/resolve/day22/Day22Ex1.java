@@ -29,7 +29,7 @@ public class Day22Ex1 implements ExSolution {
 		int riskLevel = 0;
 		for (int x = 0; x <= tx; x++) {
 			for (int y = 0; y <= ty; y++) {
-				riskLevel += cave.getErosion(x, y) % 3;
+				riskLevel += cave.getCaveNode(x, y).getTerrain().ordinal();
 			}
 		}
 		
