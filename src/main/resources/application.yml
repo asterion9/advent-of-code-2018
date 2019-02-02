@@ -4,4 +4,4 @@ logging:
   level:
     fr:
       sma:
-        adventofcode: DEBUG
+        adventofcode: INFO

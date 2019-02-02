@@ -2,11 +2,12 @@ package fr.sma.adventofcode.resolve.day15;
 
 import fr.sma.adventofcode.resolve.ExSolution;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class Day15Ex2 implements ExSolution {
@@ -21,10 +22,8 @@ public class Day15Ex2 implements ExSolution {
 		
 		String values = dataFetcher.fetch(15).trim();
 		
-		Map.Entry<Element.Type, Integer> outcome;
 		int imin = 4;
 		int imax = 200;
-		Area area;
 		int lastValidOutcome = 0;
 		do {
 			Map.Entry<Integer, Integer> nbDeadElfOutcome = simulateBattle(values, (imax + imin) / 2);
