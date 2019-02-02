@@ -14,6 +14,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * materialize the fabric as a byte array containing the number of claim on each point.
+ * as we add the claims, we count the number of area claimed exactly two times (one is not doubly claimed, and 3+ is already counted)
+ */
 @Component
 public class Day03Ex1 implements ExSolution {
 	

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
 
+/**
+ * calculate the sum of numbers
+ */
 @Component
 public class Day01Ex1 implements ExSolution {
 	

@@ -11,6 +11,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * implements Iterator to loop over the number list while maintaining the partial sum of the infinite series.
+ * iterate until a number repeat
+ */
 @Component
 public class Day01Ex2 implements ExSolution {
 	

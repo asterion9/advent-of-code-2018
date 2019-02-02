@@ -1,11 +1,9 @@
 package fr.sma.adventofcode.resolve.day5;
 
-import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * same as before, but repeat with a letter removed each time.
+ * kepp the most successful
+ */
 @Component
 public class Day05Ex2 implements ExSolution {
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private DataFetcher dataFetcher;
@@ -39,16 +40,13 @@ public class Day05Ex2 implements ExSolution {
 	public void polymerize(ArrayList<String> polymer) {
 		int index = 0;
 		while(index < polymer.size() - 1) {
-			//String line = (index > 0 ? polymer.getIn(index -1): ".") + polymer.getIn(index) + polymer.getIn(index +1)+ (index polymer.getIn(index +2);
 			if(doReact(polymer.get(index), polymer.get(index + 1))) {
-				//logger.debug(line + " match !");
 				polymer.remove(index);
 				polymer.remove(index);
 				if(index > 0) {
 					index--;
 				}
 			} else {
-				//logger.debug(line);
 				index++;
 			}
 		}

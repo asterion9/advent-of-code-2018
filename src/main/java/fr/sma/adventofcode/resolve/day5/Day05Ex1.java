@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * progressing forward from start, try to polymerize adjacent character.
+ * when found, remove them, then go back to the previous letter.
+ * repeat untl the end is reached.
+ */
 @Component
 public class Day05Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -20,6 +20,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * parse all points, find points bounds.
+ * build a map of all the area, with owner and distance from it for each case.
+ * while there are points that have not reached their maximal area of owning,
+ * search by increasing distance from each point if the case is owned by it (that is, if the case is not already owned by another closer point.)
+ * then for each case, remove the ones owned by points that also own cases at the border of the area (these points extend to infinity)
+ */
 @Component
 public class Day06Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

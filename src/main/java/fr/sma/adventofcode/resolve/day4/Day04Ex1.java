@@ -10,13 +10,16 @@ import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * parse and re organize lines by time event.
+ * build guard shift.
+ * merge the shift of same guards by keeping track of each minute of sleep and building an histogram.
+ * finding the most often asleep guard.
+ */
 @Component
 public class Day04Ex1 implements ExSolution {
 	
 	private static final Pattern PATTERN_LINE = Pattern.compile("\\[(.+)\\] (.+)");
-	
-	//private static Logger logger = LoggerFactory.getLogger(Day04Ex1.class);
 	
 	@Autowired
 	private DataFetcher dataFetcher;

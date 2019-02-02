@@ -2,6 +2,7 @@ package fr.sma.adventofcode.resolve.day2;
 
 import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
+import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * https://en.wikipedia.org/wiki/Closest_pair_of_points_problem
+ * redefine the problem as a distance problem.
+ * we define distance as the number of different letters between two strings.
+ * for each pair of string, calculate the distance, then find the smallest.
+ *
+ * NB: it is possible to use a more efficient algorithm to find two closest point,
+ * but it is difficult to implement in a n dimensional space and not necessary for such small input
+ * see https://en.wikipedia.org/wiki/Closest_pair_of_points_problem
  */
 @Component
 public class Day02Ex2 implements ExSolution {
@@ -37,37 +44,21 @@ public class Day02Ex2 implements ExSolution {
 		System.out.println(result);
 	}
 	
-	/*private PairDistance closestUntil(List<String> ids) {
-		if (ids.size() <= 3) {
-			return bruteForce(ids);
-		}
-		
-		int midPointIndex = ids.size() / 2;
-		PairDistance leftDistance = closestUntil(ids.subList(0, midPointIndex));
-		PairDistance rightDistance = closestUntil(ids.subList(midPointIndex, ids.size()));
-		
-		PairDistance distance = leftDistance.distance < rightDistance.distance ? leftDistance : rightDistance;
-		
-		List<String> strip = ids.stream()
-				.filter(id -> distance(ids.getIn(midPointIndex), id).getDistance() < distance.getDistance())
-				.collect(Collectors.toList());
-	}*/
-	
 	private PairDistance bruteForce(List<String> ids) {
-		return ids.stream()
-				.flatMap(lid -> ids.stream().filter(id -> !id.equals(lid)).map(rid -> distance(lid, rid)))
+		return EntryStream.ofPairs(ids)
+				.mapKeyValue(Day02Ex2::distance)
 				.min(Comparator.comparing(PairDistance::getDistance))
 				.orElseThrow(() -> new IllegalArgumentException("empty list of id"));
 	}
 	
-	public PairDistance distance(String lid, String rid) {
+	public static PairDistance distance(String lid, String rid) {
 		int distance = (int) StreamEx.of(lid.chars().iterator()).zipWith(StreamEx.of(rid.chars().iterator()), Object::equals)
 				.filter(aBoolean -> !aBoolean)
 				.count();
 		return new PairDistance(lid, rid, distance);
 	}
 	
-	public class PairDistance {
+	public static class PairDistance {
 		String leftId, rightId;
 		int distance;
 		

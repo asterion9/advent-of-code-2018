@@ -15,6 +15,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * for all tiles, calculate the sum fo the distances to all points.
+ * cont the own inferior to 10 000.
+ */
 @Component
 public class Day06Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

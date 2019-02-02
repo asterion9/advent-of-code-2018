@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+/**
+ * for each string, create a counter of the number of occurrence of each letter.
+ * multiple the sum of pairs and the sum of triplets
+ */
 @Component
 public class Day02Ex1 implements ExSolution {
 	

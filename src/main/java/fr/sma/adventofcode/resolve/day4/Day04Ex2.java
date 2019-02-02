@@ -10,13 +10,13 @@ import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * same as before, but filtering by the guard being the most often asleep at the same minute.
+ */
 @Component
 public class Day04Ex2 implements ExSolution {
 	
 	private static final Pattern PATTERN_LINE = Pattern.compile("\\[(.+)\\] (.+)");
-	
-	//private static Logger logger = LoggerFactory.getLogger(Day04Ex1.class);
 	
 	@Autowired
 	private DataFetcher dataFetcher;

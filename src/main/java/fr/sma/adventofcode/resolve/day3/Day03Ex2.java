@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * we proceed same as before, but we keep track of who own each square inch of fabric.
+ * we also keep track of all not overridden ids, removing them each time we overlap with it.
+ * at the end, only one un overridden id remains.
+ */
 @Component
 public class Day03Ex2 implements ExSolution {
 	
