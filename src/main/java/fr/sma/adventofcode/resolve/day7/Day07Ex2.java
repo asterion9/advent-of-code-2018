@@ -1,7 +1,12 @@
 package fr.sma.adventofcode.resolve.day7;
 
-import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
+import one.util.streamex.StreamEx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.PriorityQueue;
@@ -9,12 +14,11 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import one.util.streamex.StreamEx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
+/**
+ * build the step queue as before, but with time information for each step.
+ * consume the steps with a worker pool that keeps track of time passed on each step.
+ */
 @Component
 public class Day07Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

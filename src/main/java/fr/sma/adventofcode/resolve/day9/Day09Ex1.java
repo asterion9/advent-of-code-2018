@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * build a data structure to handle the marble ring
+ * run the game for the number of turns
+ */
 @Component
 public class Day09Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

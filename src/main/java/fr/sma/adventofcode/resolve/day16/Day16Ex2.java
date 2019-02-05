@@ -24,6 +24,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * I use my tester to build a correspondence table between the instructions and the numbers.
+ * after running all tests, instructions are still mostly undetermined.
+ * I then simplify my correspondence table until every instruction number is known,
+ * Then I use my virtual machine to compile the code and run it.
+ */
 @Component
 public class Day16Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

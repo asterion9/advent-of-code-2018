@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+/**
+ * parse the inputs and run the simulation.
+ * special care must be given to the ordering of the step of the battle, and of the unit turn.
+ */
 @Component
 public class Day24Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

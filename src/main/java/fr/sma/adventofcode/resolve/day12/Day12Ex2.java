@@ -14,6 +14,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * same as exo 1, but register the potline into the growth predictor.
+ * this class register each state until it come back to a known one, ignoring the offset.
+ * we can then deduce a repeating cycle that change only the offset and so predcti long into the future.
+ */
 @Component
 public class Day12Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

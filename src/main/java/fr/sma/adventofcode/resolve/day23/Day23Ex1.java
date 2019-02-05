@@ -12,6 +12,9 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * parse the input and find the number of nanobots inside the widest nanobot area.
+ */
 @Component
 public class Day23Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

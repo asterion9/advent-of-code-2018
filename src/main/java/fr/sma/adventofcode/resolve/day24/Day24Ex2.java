@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+/**
+ * similar to day 15, however this time using a dichotomy algorithm is much more hazardous since
+ * the immunity/weakness system and the whole-unit-die rule can drastically alter the outcome.
+ * rater, I iterate over all possible value until I find the very first one where immunity wins.
+ */
 @Component
 public class Day24Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

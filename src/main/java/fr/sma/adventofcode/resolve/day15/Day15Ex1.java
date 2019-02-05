@@ -7,6 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * parse the input and build a representation of the field.
+ * you need to pay attention to the ordering.
+ * I use a recursive path finding algorithm for each target that build a tree of shortest route to the nearest target,
+ * respecting the moving priority to ensure that the correct route is selected.
+ */
 @Component
 public class Day15Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

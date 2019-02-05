@@ -12,6 +12,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.stream.Collectors;
 
+/**
+ * same as before, but calculate the required size recursively.
+ */
 @Component
 public class Day08Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

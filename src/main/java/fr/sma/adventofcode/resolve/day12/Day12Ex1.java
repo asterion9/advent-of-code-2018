@@ -1,16 +1,23 @@
 package fr.sma.adventofcode.resolve.day12;
 
-import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * parse input into a potline, a potline is constituted of an infinity of empty pot,
+ * followed by an arbitrary number of pot, followed by an infinity of empty pots
+ * we represent that as string of pot, with an offset.
+ * calculate the next potline for 20 iterations
+ */
 @Component
 public class Day12Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

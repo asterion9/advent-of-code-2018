@@ -11,6 +11,13 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * In order to find the point with the greatest number of nanobots connected, it is not possible to search each location.
+ * however, considering the value of a point is vaguely continuous, I hypothesize that the point is in an area of high value points.
+ * in order to find the point, I scan 10^3 points across the whole central area,
+ * then I reduce the search area by 8 (2^3) and start again, centered around the previous highest point
+ * until the area is small enough to be fully searched.
+ */
 @Component
 public class Day23Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

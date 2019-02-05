@@ -14,6 +14,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * same as before, but print time to the message instead of the emssage itself.
+ */
 @Component
 public class Day10Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

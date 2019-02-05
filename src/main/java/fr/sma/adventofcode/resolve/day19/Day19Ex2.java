@@ -16,6 +16,15 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * unfortunately, compiling the instructions to bytecode didn't solve the problem
+ * (even if it was way faster than the virtual machine of day 16)
+ * I then tried to optimize the bytecode by replacing instructions that modified the pointer register with goto
+ * doing so increased the speed of the code, but still not enough to compute the solution.
+ * by decompiling the produced bytecode, it is possible to identify and understand the instructions purpose.
+ * it is, actually, a very inefficient factorisation algorithm. By rewriting the code with an optimized algrithm,
+ * I can solve this day exercise.
+ */
 @Component
 public class Day19Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

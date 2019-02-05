@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * simple solution, just run the algorithm, using the string as the data structure.
+ */
 @Component
 public class Day14Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

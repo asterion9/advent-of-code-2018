@@ -14,6 +14,11 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * I built a "virtual machine" that can compile the code in a series of lambdas, then run it onto the register.
+ * I the use a tester to compile each line with each possible instruction
+ * and test whether this instruction is compatible with the expected output.
+ */
 @Component
 public class Day16Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

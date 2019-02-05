@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * dynamically generate grid values for the calculation.
+ * calculate all values and return the biggest.
+ */
 @Component
 public class Day11Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

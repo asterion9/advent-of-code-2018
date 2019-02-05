@@ -7,6 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * the input regex represent all the paths that are matched by it,
+ * all these paths create a maze.
+ * I then recursively calculate the distance from the center of all the maze cells to find its fathest cell.
+ * a swing visualization is available (by default)
+ */
 @Component
 public class Day20Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

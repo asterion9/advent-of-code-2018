@@ -1,15 +1,19 @@
 package fr.sma.adventofcode.resolve.day14;
 
 import com.google.common.primitives.Bytes;
-import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.Arrays;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
+/**
+ * ex1 solution can't work for performance reason, we use a byte array instead to do basically the same thing.
+ */
 @Component
 public class Day14Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

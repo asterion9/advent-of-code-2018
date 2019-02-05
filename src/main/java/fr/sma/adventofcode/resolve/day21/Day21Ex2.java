@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * following part1, the longest execution time is for finding the last value produced
+ * before the generator start to cycle.
+ */
 @Component
 public class Day21Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

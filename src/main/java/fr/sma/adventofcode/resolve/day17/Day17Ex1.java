@@ -9,14 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * I use a recursive approach, following the natural flow of the water,
+ * when the water have flown left and right, we can turn the whole line into still water.
+ * there si available a swing visualization of the flow of water.
+ */
 @Component
 public class Day17Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private DataFetcher dataFetcher;
-	
-	
 	
 	@Override
 	public void run() throws Exception {
@@ -27,6 +30,8 @@ public class Day17Ex1 implements ExSolution {
 		WaterMap waterMap = WaterMap.build(values);
 		
 		Point start = new Point(500, 0);
+		
+		//WaterMap.WaterPainter painter = waterMap.getPainter();
 		
 		waterMap.simulateWater(start);
 		

@@ -1,16 +1,22 @@
 package fr.sma.adventofcode.resolve.day7;
 
-import fr.sma.adventofcode.resolve.util.DataFetcher;
 import fr.sma.adventofcode.resolve.ExSolution;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import fr.sma.adventofcode.resolve.util.DataFetcher;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+/**
+ * parse input to build a stream of step, each line creating 2 step.
+ * merge the identical step to build a Stepqueue, it's a graph that can be iterated over.
+ * iterate over the step queue for result.
+ */
 @Component
 public class Day07Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

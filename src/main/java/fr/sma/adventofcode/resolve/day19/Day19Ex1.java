@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * I solve the problem by dynamically creating a java class by writing the bytecode directly from the inputs.
+ */
 @Component
 public class Day19Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

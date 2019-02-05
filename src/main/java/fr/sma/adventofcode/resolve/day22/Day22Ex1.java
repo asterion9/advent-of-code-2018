@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * I build the cave, then i sum the risk level for all calculated cell.
+ * important to note is the usage of the modulo multiplication to avoid overflow
+ */
 @Component
 public class Day22Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

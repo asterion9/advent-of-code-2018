@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * same thing as ex1, but just count differently.
+ */
 @Component
 public class Day17Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

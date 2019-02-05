@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * build a track system using the data, then run the simulation.
+ * wait 20ms between steps and display using swing
+ */
 @Component
 public class Day13Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

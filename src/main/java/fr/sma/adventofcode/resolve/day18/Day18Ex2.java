@@ -2,17 +2,22 @@ package fr.sma.adventofcode.resolve.day18;
 
 import fr.sma.adventofcode.resolve.ExSolution;
 import fr.sma.adventofcode.resolve.util.DataFetcher;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * the forest wil eventually end up cycling.
+ * I reuse the growth predictor of day 12 to capture the cycle and predict the state at any point in the future.
+ */
 @Component
 public class Day18Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

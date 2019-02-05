@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * same as before but with 100 time more turns
+ */
 @Component
 public class Day09Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

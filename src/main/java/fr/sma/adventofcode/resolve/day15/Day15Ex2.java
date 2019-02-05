@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * same as ex1 for runnign the fight,
+ * we use a dichotomy search to locate the lowest value at which the battle issue change.
+ */
 @Component
 public class Day15Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -14,6 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * parse the star position and velocity and build a sky from it.
+ * define the star area function that calculate the surface roughly occupied by the stars.
+ * we consider this function as unimodal (https://en.wikipedia.org/wiki/Unimodality)
+ * therefore we can apply a simple search algorithm for the lowest point,
+ * that is the point were the stars are closest to each other and the more likely to form a message
+ */
 @Component
 public class Day10Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

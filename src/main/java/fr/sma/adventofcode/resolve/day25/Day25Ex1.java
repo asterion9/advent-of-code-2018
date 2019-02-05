@@ -16,6 +16,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * I test each unique pair of stars to connect them together, then I build constellations by removing all the connected stars at once.
+ */
 @Component
 public class Day25Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

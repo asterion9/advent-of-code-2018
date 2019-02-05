@@ -13,6 +13,11 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.stream.Collectors;
 
+/**
+ * parse the input into a stack of int.
+ * build nodes recursively, each node creating its children, then consuming the remaining ints as metadata.
+ * sum all metadatas of the tree for the answers
+ */
 @Component
 public class Day08Ex1 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

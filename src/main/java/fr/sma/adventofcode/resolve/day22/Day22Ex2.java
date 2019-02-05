@@ -12,6 +12,12 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeSet;
 
+/**
+ * to find the shortest route, I use a Dijkstra-like algorithm,
+ * except each node contains weight for each equipment,
+ * and I choose then ext node using its current weight and distance to the target,
+ * this allows to restrict the otherwise infinite cave.
+ */
 @Component
 public class Day22Ex2 implements ExSolution {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
